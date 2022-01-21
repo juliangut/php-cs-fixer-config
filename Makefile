@@ -7,7 +7,7 @@ lint-php:
 
 .PHONY: lint-phpcs
 lint-phpcs:
-	vendor/bin/phpcs --standard=PSR12 src tests
+	vendor/bin/phpcs --standard=PSR12 src
 
 .PHONY: lint-phpcs-fixer
 lint-phpcs-fixer:
