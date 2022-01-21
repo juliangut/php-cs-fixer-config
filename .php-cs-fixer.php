@@ -25,5 +25,6 @@ $finder = Finder::create()
     ->in(__DIR__)
     ->name('.php-cs-fixer.php');
 
-return (new FixerConfig74($header))
+return (new FixerConfig74())
+    ->setHeader($header)
     ->setFinder($finder);

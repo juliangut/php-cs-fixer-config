@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Jgut\CS\Fixer;
 
-class FixerConfig81 extends AbstractConfig
+class FixerConfig81 extends AbstractFixerConfig
 {
     /**
      * @inheritDoc

@@ -43,15 +43,13 @@ Use one of the provided configurations depending on the PHP version you want to 
 * `Jgut\CS\Fixer\FixerConfig80`, PHP >= 8.0
 * `Jgut\CS\Fixer\FixerConfig81`, PHP >= 8.1
 
-##### Git
-
 Add `.php-cs-fixer.cache` to your `.gitignore` file
 
 ### Configurations
 
 #### Additional rules
 
-Additional rules can be added, this rules can be new or override rules already set by the configuration
+Additional rules can be added, this rules can be new or override rules already set
 
 ```php
 return (new FixerConfig80($header))
@@ -63,11 +61,11 @@ return (new FixerConfig80($header))
 
 #### Header
 
-Provide a header string to constructor, and it will be prepended to every file analysed by php-cs-fixer. The string `{{year}}` will be replaced by the current year
+Provide a header string, it will be prepended to every file analysed by php-cs-fixer. The string `{{year}}` will be replaced by the current year
 
 ```php
-return (new FixerConfig80('(c) 2021-{{year}} Julián Gutiérrez <juliangut@gmail.com>'))
-    ->setFinder($finder);
+return (new FixerConfig80())
+    ->setHeader('(c) 2021-{{year}} Julián Gutiérrez <juliangut@gmail.com>');
 ```
 
 ```diff
@@ -143,7 +141,7 @@ return (new FixerConfig80())
 -     * @return bool
 -     *
 -    public function isBaz()
-     public function isBaz(): bool
++    public function isBaz(): bool
      {
         return $this->baz;
      }

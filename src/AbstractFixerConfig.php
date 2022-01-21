@@ -16,9 +16,9 @@ use PhpCsFixerCustomFixers\Fixers as KubawerlosFixes;
 use PhpCsFixer\Config;
 use DateTime;
 
-abstract class AbstractConfig extends Config
+abstract class AbstractFixerConfig extends Config
 {
-    private ?string $header;
+    private ?string $header = null;
 
     private bool $typeInfer = false;
 
@@ -27,11 +27,9 @@ abstract class AbstractConfig extends Config
      */
     private array $additionalRules = [];
 
-    public function __construct(?string $header = null)
+    public function __construct()
     {
         parent::__construct('juliangut/phpcs-fixer-config');
-
-        $this->header = $header;
 
         $this->setUsingCache(true);
         $this->setRiskyAllowed(true);
@@ -272,9 +270,9 @@ abstract class AbstractConfig extends Config
         $this->additionalRules = $additionalRules;
     }
 
-    final public function setTypeInfer(bool $typeInfer): self
+    final public function setHeader(string $header): self
     {
-        $this->typeInfer = $typeInfer;
+        $this->header = $header;
 
         return $this;
     }
@@ -292,5 +290,12 @@ abstract class AbstractConfig extends Config
         );
 
         return trim($header) !== '' ? trim($header) : null;
+    }
+
+    final public function setTypeInfer(bool $typeInfer): self
+    {
+        $this->typeInfer = $typeInfer;
+
+        return $this;
     }
 }
