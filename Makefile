@@ -31,19 +31,19 @@ fix:
 
 .PHONY: qa-phpcpd
 qa-phpcpd:
-	vendor/bin/phpcpd src tests
+	vendor/bin/phpcpd src
 
 .PHONY: qa-phpmd
 qa-phpmd:
-	vendor/bin/phpmd src,tests ansi unusedcode,naming,design,controversial,codesize
+	vendor/bin/phpmd src ansi unusedcode,naming,design,controversial,codesize
 
 .PHONY: qa-phpmnd
 qa-phpmnd:
-	vendor/bin/phpmnd --ignore-numbers=2 --ansi src tests
+	vendor/bin/phpmnd --ignore-numbers=2 --ansi src
 
 .PHONY: qa-compatibility
 qa-compatibility:
-	vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 8.1- src tests
+	vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 8.1- src
 
 .PHONY: qa-phpstan
 qa-phpstan:
