@@ -181,7 +181,6 @@ abstract class AbstractFixerConfig extends Config
                 'max-args' => false,
             ],
             'PhpCsFixerCustomFixers/comment_surrounded_by_spaces' => true,
-            'PhpCsFixerCustomFixers/constructor_empty_braces' => true,
             'PhpCsFixerCustomFixers/no_commented_out_code' => true,
             'PhpCsFixerCustomFixers/no_duplicated_array_key' => true,
             'PhpCsFixerCustomFixers/no_leading_slash_in_global_namespace' => true,
