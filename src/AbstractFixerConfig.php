@@ -51,9 +51,9 @@ abstract class AbstractFixerConfig extends Config
     {
         $rules = array_merge(
             $this->getRulesets(),
-            $this->getCommonRules(),
             $this->getPhpUnitRules(),
             $this->getTypeInferRules(),
+            $this->getCommonRules(),
             $this->additionalRules,
         );
 
@@ -75,10 +75,59 @@ abstract class AbstractFixerConfig extends Config
 
     /**
      * @return array<string, bool|array<string, mixed>>
+     */
+    private function getPhpUnitRules(): array
+    {
+        return $this->phpUnit === true
+            ? [
+                'php_unit_construct' => true,
+                'php_unit_dedicate_assert' => [
+                    'target' => '5.6',
+                ],
+                'php_unit_dedicate_assert_internal_type' => [
+                    'target' => '7.5',
+                ],
+                'php_unit_expectation' => [
+                    'target' => '8.4',
+                ],
+                'php_unit_internal_class' => true,
+                'php_unit_mock' => [
+                    'target' => '5.5',
+                ],
+                'php_unit_mock_short_will_return' => true,
+                'php_unit_namespaced config' => [
+                    'target' => '6.0',
+                ],
+                'php_unit_no_expectation_annotation' => [
+                    'target' => '4.3',
+                ],
+                'php_unit_set_up_tear_down_visibility' => true,
+                'php_unit_test_case_static_method_calls' => true,
+            ]
+            : [];
+    }
+
+    /**
+     * @return array<string, bool|array<string, mixed>>
+     */
+    private function getTypeInferRules(): array
+    {
+        return $this->typeInfer === true
+            ? [
+                // Watch out! these are experimental rules
+                'phpdoc_to_param_type' => true,
+                'phpdoc_to_property_type' => true,
+                'phpdoc_to_return_type' => true,
+            ]
+            : [];
+    }
+
+    /**
+     * @return array<string, bool|array<string, mixed>>
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function getCommonRules(): array
+    protected function getCommonRules(): array
     {
         return [
             'align_multiline_comment' => true,
@@ -257,55 +306,6 @@ abstract class AbstractFixerConfig extends Config
                 'less_and_greater' => false,
             ],
         ];
-    }
-
-    /**
-     * @return array<string, bool|array<string, mixed>>
-     */
-    private function getPhpUnitRules(): array
-    {
-        return $this->phpUnit === true
-            ? [
-                'php_unit_construct' => true,
-                'php_unit_dedicate_assert' => [
-                    'target' => '5.6',
-                ],
-                'php_unit_dedicate_assert_internal_type' => [
-                    'target' => '7.5',
-                ],
-                'php_unit_expectation' => [
-                    'target' => '8.4',
-                ],
-                'php_unit_internal_class' => true,
-                'php_unit_mock' => [
-                    'target' => '5.5',
-                ],
-                'php_unit_mock_short_will_return' => true,
-                'php_unit_namespaced config' => [
-                    'target' => '6.0',
-                ],
-                'php_unit_no_expectation_annotation' => [
-                    'target' => '4.3',
-                ],
-                'php_unit_set_up_tear_down_visibility' => true,
-                'php_unit_test_case_static_method_calls' => true,
-            ]
-            : [];
-    }
-
-    /**
-     * @return array<string, bool|array<string, mixed>>
-     */
-    private function getTypeInferRules(): array
-    {
-        return $this->typeInfer === true
-            ? [
-                // Watch out! these are experimental rules
-                'phpdoc_to_param_type' => true,
-                'phpdoc_to_property_type' => true,
-                'phpdoc_to_return_type' => true,
-            ]
-            : [];
     }
 
     /**
