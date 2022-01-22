@@ -20,27 +20,19 @@ class FixerConfig74 extends AbstractFixerConfig
     {
         return [
             '@PSR12' => true,
-            '@PSR12:risky' => true,
             '@PHP74Migration' => true,
-            '@PHP74Migration:risky' => true,
-            '@PHPUnit84Migration:risky' => true,
         ];
     }
 
     /**
      * @inheritDoc
      */
-    protected function getBaseRules(): array
+    protected function getCommonRules(): array
     {
         return array_merge(
-            parent::getBaseRules(),
+            parent::getCommonRules(),
             [
                 'clean_namespace' => true,
-                'no_alias_functions' => [
-                    'sets' => ['@all'],
-                ],
-                'no_php4_constructor' => true,
-                'no_unneeded_final_method' => true,
                 'no_unset_cast' => true,
                 'trailing_comma_in_multiline' => [
                     'elements' => ['arrays', 'arguments'],

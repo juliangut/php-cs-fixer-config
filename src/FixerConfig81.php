@@ -20,21 +20,20 @@ class FixerConfig81 extends AbstractFixerConfig
     {
         return [
             '@PSR12' => true,
-            '@PSR12:risky' => true,
-            '@PHP80Migration:risky' => true,
             '@PHP81Migration' => true,
-            '@PHPUnit84Migration:risky' => true,
         ];
     }
 
     /**
      * @inheritDoc
      */
-    protected function getBaseRules(): array
+    protected function getCommonRules(): array
     {
         return array_merge(
-            parent::getBaseRules(),
+            parent::getCommonRules(),
             [
+                'get_class_to_class_keyword' => true,
+                'modernize_strpos' => true,
                 'PhpCsFixerCustomFixers/multiline_promoted_properties' => true,
                 'PhpCsFixerCustomFixers/promoted_constructor_property' => true,
                 'PhpCsFixerCustomFixers/stringable_interface' => true,

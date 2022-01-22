@@ -22,6 +22,8 @@ abstract class AbstractFixerConfig extends Config
 
     private bool $typeInfer = false;
 
+    private bool $phpUnit = false;
+
     /**
      * @var array<string, bool|array<string, mixed>>
      */
@@ -29,7 +31,7 @@ abstract class AbstractFixerConfig extends Config
 
     public function __construct()
     {
-        parent::__construct('juliangut/phpcs-fixer-config');
+        parent::__construct('juliangut/php-cs-fixer-config');
 
         $this->setUsingCache(true);
         $this->setRiskyAllowed(true);
@@ -49,7 +51,8 @@ abstract class AbstractFixerConfig extends Config
     {
         $rules = array_merge(
             $this->getRulesets(),
-            $this->getBaseRules(),
+            $this->getCommonRules(),
+            $this->getPhpUnitRules(),
             $this->getTypeInferRules(),
             $this->additionalRules,
         );
@@ -75,7 +78,7 @@ abstract class AbstractFixerConfig extends Config
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    protected function getBaseRules(): array
+    private function getCommonRules(): array
     {
         return [
             'align_multiline_comment' => true,
@@ -89,14 +92,17 @@ abstract class AbstractFixerConfig extends Config
             'class_attributes_separation' => true,
             'combine_consecutive_issets' => true,
             'combine_consecutive_unsets' => true,
+            'combine_nested_dirname' => true,
             'concat_space' => [
                 'spacing' => 'one',
             ],
+            'declare_strict_types' => true,
             'dir_constant' => true,
             'echo_tag_syntax' => true,
             'empty_loop_body' => [
                 'style' => 'braces',
             ],
+            'ereg_to_preg' => true,
             'escape_implicit_backslashes' => true,
             'explicit_indirect_variable' => true,
             'explicit_string_variable' => true,
@@ -114,6 +120,7 @@ abstract class AbstractFixerConfig extends Config
                 'indentation' => 'same_as_start',
             ],
             'heredoc_to_nowdoc' => true,
+            'implode_call' => true,
             'include' => true,
             'is_null' => true,
             'lambda_not_used_import' => true,
@@ -130,6 +137,9 @@ abstract class AbstractFixerConfig extends Config
             'native_function_casing' => true,
             'native_function_invocation' => true,
             'native_function_type_declaration_casing' => true,
+            'no_alias_functions' => [
+                'sets' => ['@all'],
+            ],
             'no_alias_language_construct_call' => true,
             'no_alternative_syntax' => true,
             'no_binary_string' => true,
@@ -142,21 +152,26 @@ abstract class AbstractFixerConfig extends Config
             'no_mixed_echo_print' => true,
             'no_multiline_whitespace_around_double_arrow' => true,
             'no_null_property_initialization' => true,
+            'no_php4_constructor' => true,
             'no_short_bool_cast' => true,
             'no_singleline_whitespace_before_semicolons' => true,
             'no_spaces_around_offset' => true,
             'no_superfluous_elseif' => true,
             'no_superfluous_phpdoc_tags' => true,
             'no_trailing_comma_in_singleline_array' => true,
+            'no_trailing_whitespace_in_string' => true,
             'no_unneeded_control_parentheses' => true,
             'no_unneeded_curly_braces' => [
                 'namespaces' => true,
             ],
+            'no_unneeded_final_method' => true,
+            'no_unreachable_default_argument_value' => true,
             'no_unset_on_property' => true,
             'no_unused_imports' => true,
             'no_useless_else' => true,
             'no_useless_sprintf' => true,
             'no_useless_return' => true,
+            'non_printable_character' => true,
             'nullable_type_declaration_for_default_null_value' => true,
             'object_operator_without_whitespace' => true,
             'operator_linebreak' => true,
@@ -183,12 +198,6 @@ abstract class AbstractFixerConfig extends Config
             ],
             'PhpCsFixerCustomFixers/phpdoc_array_style' => true,
             'PhpCsFixerCustomFixers/phpdoc_param_order' => true,
-            'php_unit_construct' => true,
-            'php_unit_internal_class' => true,
-            'php_unit_mock_short_will_return' => true,
-            'php_unit_set_up_tear_down_visibility' => true,
-            'php_unit_test_annotation' => true,
-            'php_unit_test_case_static_method_calls' => true,
             'phpdoc_add_missing_param_annotation' => true,
             'phpdoc_align' => true,
             'phpdoc_annotation_without_dot' => true,
@@ -216,8 +225,10 @@ abstract class AbstractFixerConfig extends Config
                 'null_adjustment' => 'always_last',
             ],
             'phpdoc_var_without_name' => true,
+            'pow_to_exponentiation' => true,
             'protected_to_private' => true,
             'psr_autoloading' => true,
+            'random_api_migration' => true,
             'regular_callable_call' => true,
             'return_assignment' => true,
             'self_accessor' => true,
@@ -234,10 +245,12 @@ abstract class AbstractFixerConfig extends Config
             'static_lambda' => true,
             'strict_comparison' => true,
             'strict_param' => true,
+            'string_length_to_empty' => true,
             'string_line_ending' => true,
             'switch_continue_to_break' => true,
             'trim_array_spaces' => true,
             'unary_operator_spaces' => true,
+            'void_return' => true,
             'whitespace_after_comma_in_array' => true,
             'yoda_style' => [
                 'equal' => false,
@@ -250,7 +263,41 @@ abstract class AbstractFixerConfig extends Config
     /**
      * @return array<string, bool|array<string, mixed>>
      */
-    protected function getTypeInferRules(): array
+    private function getPhpUnitRules(): array
+    {
+        return $this->phpUnit === true
+            ? [
+                'php_unit_construct' => true,
+                'php_unit_dedicate_assert' => [
+                    'target' => '5.6',
+                ],
+                'php_unit_dedicate_assert_internal_type' => [
+                    'target' => '7.5',
+                ],
+                'php_unit_expectation' => [
+                    'target' => '8.4',
+                ],
+                'php_unit_internal_class' => true,
+                'php_unit_mock' => [
+                    'target' => '5.5',
+                ],
+                'php_unit_mock_short_will_return' => true,
+                'php_unit_namespaced config' => [
+                    'target' => '6.0',
+                ],
+                'php_unit_no_expectation_annotation' => [
+                    'target' => '4.3',
+                ],
+                'php_unit_set_up_tear_down_visibility' => true,
+                'php_unit_test_case_static_method_calls' => true,
+            ]
+            : [];
+    }
+
+    /**
+     * @return array<string, bool|array<string, mixed>>
+     */
+    private function getTypeInferRules(): array
     {
         return $this->typeInfer === true
             ? [
@@ -292,7 +339,14 @@ abstract class AbstractFixerConfig extends Config
         return trim($header) !== '' ? trim($header) : null;
     }
 
-    final public function setTypeInfer(bool $typeInfer): self
+    final public function enablePhpUnitRules(bool $phpUnit = true): self
+    {
+        $this->phpUnit = $phpUnit;
+
+        return $this;
+    }
+
+    final public function enableTypeInferRules(bool $typeInfer = true): self
     {
         $this->typeInfer = $typeInfer;
 

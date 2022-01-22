@@ -9,6 +9,8 @@
 
 Opinionated as can be configuration defaults for [PHP-CS-Fixer](https://github.com/FriendsOfPhp/PHP-CS-Fixer)
 
+Configurations for PHPUnit assumes versión 8.4 or newer is being used
+
 ## Installation
 
 ### Composer
@@ -82,15 +84,24 @@ return (new FixerConfig80())
  namespace App;
 ```
 
+#### PHPUnit
+
+If you work with PHPUnit
+
+```php
+return (new FixerConfig80())
+    ->enablePhpUnitRules();
+```
+
 #### Type Infer
 
-If you're in the middle of the migration to "type all the things", you could set `type infer` and let php-cs-fixer try to migrate types from annotations in properties, parameters and returns for you
+If you're in the middle of the migration to "type all the things", you could eneble "type infer" and let php-cs-fixer try to migrate types from annotations in properties, parameters and returns for you
 
 Be aware these rules are experimental and will need human supervision after fixing
 
 ```php
 return (new FixerConfig80())
-    ->setTypeInfer(true);
+    ->enableTypeInferRules();
 ```
 
 ```diff
