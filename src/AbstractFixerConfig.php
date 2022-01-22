@@ -311,9 +311,11 @@ abstract class AbstractFixerConfig extends Config
     /**
      * @param array<string, bool|array<string, mixed>> $additionalRules
      */
-    final public function setAdditionalRules(array $additionalRules): void
+    final public function setAdditionalRules(array $additionalRules): self
     {
         $this->additionalRules = $additionalRules;
+
+        return $this;
     }
 
     final public function setHeader(string $header): self
