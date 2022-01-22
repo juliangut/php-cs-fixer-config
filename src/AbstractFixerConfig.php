@@ -95,7 +95,7 @@ abstract class AbstractFixerConfig extends Config
                     'target' => '5.5',
                 ],
                 'php_unit_mock_short_will_return' => true,
-                'php_unit_namespaced config' => [
+                'php_unit_namespaced' => [
                     'target' => '6.0',
                 ],
                 'php_unit_no_expectation_annotation' => [
