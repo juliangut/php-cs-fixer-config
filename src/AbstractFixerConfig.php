@@ -83,7 +83,7 @@ abstract class AbstractFixerConfig extends Config
             'array_indentation' => true,
             'binary_operator_spaces' => true,
             'blank_line_before_statement' => [
-                'statements' => ['break', 'case', 'continue', 'declare', 'default', 'return', 'throw', 'try'],
+                'statements' => ['case', 'continue', 'declare', 'default', 'return', 'throw', 'try'],
             ],
             'cast_spaces' => true,
             'class_attributes_separation' => true,
