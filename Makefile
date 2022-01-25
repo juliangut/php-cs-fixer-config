@@ -39,7 +39,7 @@ qa-phpmd:
 
 .PHONY: qa-phpmnd
 qa-phpmnd:
-	vendor/bin/phpmnd --ignore-numbers=2 --ansi src
+	vendor/bin/phpmnd --ansi src
 
 .PHONY: qa-compatibility
 qa-compatibility:

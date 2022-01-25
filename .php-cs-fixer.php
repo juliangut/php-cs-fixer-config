@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-use Jgut\CS\Fixer\FixerConfig74;
+use Jgut\CS\Fixer\FixerConfig73;
 use PhpCsFixer\Finder;
 
 $header = <<<'HEADER'
@@ -25,6 +25,6 @@ $finder = Finder::create()
     ->in(__DIR__)
     ->name('.php-cs-fixer.php');
 
-return (new FixerConfig74())
+return (new FixerConfig73())
     ->setHeader($header)
     ->setFinder($finder);

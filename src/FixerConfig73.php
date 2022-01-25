@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace Jgut\CS\Fixer;
 
-class FixerConfig74 extends AbstractFixerConfig
+class FixerConfig73 extends AbstractFixerConfig
 {
-    private const PHP74 = 70400;
+    private const PHP73 = 70300;
 
     /**
      * @inheritDoc
@@ -22,7 +22,7 @@ class FixerConfig74 extends AbstractFixerConfig
     {
         return [
             '@PSR12' => true,
-            '@PHP74Migration' => true,
+            '@PHP73Migration' => true,
         ];
     }
 
@@ -34,12 +34,10 @@ class FixerConfig74 extends AbstractFixerConfig
         return array_merge(
             parent::getCommonRules(),
             [
+                'assign_null_coalescing_to_coalesce_equal' => true,
                 'clean_namespace' => true,
                 'no_unset_cast' => true,
-                'PhpCsFixerCustomFixers/numeric_literal_separator' => [
-                    'decimal' => true,
-                    'float' => true,
-                ],
+                'normalize_index_brace' => true,
                 'trailing_comma_in_multiline' => [
                     'elements' => ['arrays', 'arguments'],
                 ],
@@ -52,6 +50,6 @@ class FixerConfig74 extends AbstractFixerConfig
      */
     protected function getMinimumPhpVersion(): int
     {
-        return self::PHP74;
+        return self::PHP73;
     }
 }

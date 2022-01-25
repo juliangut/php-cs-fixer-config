@@ -13,6 +13,8 @@ namespace Jgut\CS\Fixer;
 
 class FixerConfig81 extends AbstractFixerConfig
 {
+    private const PHP81 = 80100;
+
     /**
      * @inheritDoc
      */
@@ -35,6 +37,10 @@ class FixerConfig81 extends AbstractFixerConfig
                 'get_class_to_class_keyword' => true,
                 'modernize_strpos' => true,
                 'PhpCsFixerCustomFixers/multiline_promoted_properties' => true,
+                'PhpCsFixerCustomFixers/numeric_literal_separator' => [
+                    'decimal' => true,
+                    'float' => true,
+                ],
                 'PhpCsFixerCustomFixers/promoted_constructor_property' => true,
                 'PhpCsFixerCustomFixers/stringable_interface' => true,
                 'trailing_comma_in_multiline' => [
@@ -42,5 +48,13 @@ class FixerConfig81 extends AbstractFixerConfig
                 ],
             ],
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getMinimumPhpVersion(): int
+    {
+        return self::PHP81;
     }
 }

@@ -41,6 +41,7 @@ return (new FixerConfig80())
 
 Use one of the provided configurations depending on the PHP version you want to support:
 
+* `Jgut\CS\Fixer\FixerConfig73`, PHP >= 7.3
 * `Jgut\CS\Fixer\FixerConfig74`, PHP >= 7.4
 * `Jgut\CS\Fixer\FixerConfig80`, PHP >= 8.0
 * `Jgut\CS\Fixer\FixerConfig81`, PHP >= 8.1

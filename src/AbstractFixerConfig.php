@@ -15,32 +15,48 @@ use PedroTroller\CS\Fixer\Fixers as PedroTrollerFixers;
 use PhpCsFixerCustomFixers\Fixers as KubawerlosFixes;
 use PhpCsFixer\Config;
 use DateTime;
+use RuntimeException;
 
 abstract class AbstractFixerConfig extends Config
 {
-    private ?string $header = null;
+    /**
+     * @var string|null
+     */
+    private $header;
 
-    private bool $typeInfer = false;
+    /**
+     * @var bool
+     */
+    private $typeInfer = false;
 
-    private bool $phpUnit = false;
+    /**
+     * @var bool
+     */
+    private $phpUnit = false;
 
     /**
      * @var array<string, bool|array<string, mixed>>
      */
-    private array $additionalRules = [];
+    private $additionalRules = [];
 
     public function __construct()
     {
+        if ($this->getMinimumPhpVersion() > \PHP_VERSION_ID) {
+            throw new RuntimeException(sprintf('Minimum required PHP version is "%s".', $this->getMinimumPhpVersion()));
+        }
+
         parent::__construct('juliangut/php-cs-fixer-config');
 
         $this->setUsingCache(true);
         $this->setRiskyAllowed(true);
 
-        $this->registerCustomFixers([
-            ...new PedroTrollerFixers(),
-            ...new KubawerlosFixes(),
-        ]);
+        $this->registerCustomFixers(array_merge(
+            iterator_to_array(new PedroTrollerFixers()),
+            iterator_to_array(new KubawerlosFixes()),
+        ));
     }
+
+    abstract protected function getMinimumPhpVersion(): int;
 
     /**
      * @inheritDoc
@@ -131,8 +147,8 @@ abstract class AbstractFixerConfig extends Config
     {
         return [
             'align_multiline_comment' => true,
-            'array_push' => true,
             'array_indentation' => true,
+            'array_push' => true,
             'binary_operator_spaces' => true,
             'blank_line_before_statement' => [
                 'statements' => ['case', 'continue', 'declare', 'default', 'return', 'throw', 'try'],
@@ -240,10 +256,6 @@ abstract class AbstractFixerConfig extends Config
             'PhpCsFixerCustomFixers/no_useless_dirname_call' => true,
             'PhpCsFixerCustomFixers/no_useless_parenthesis' => true,
             'PhpCsFixerCustomFixers/no_useless_strlen' => true,
-            'PhpCsFixerCustomFixers/numeric_literal_separator' => [
-                'decimal' => true,
-                'float' => true,
-            ],
             'PhpCsFixerCustomFixers/phpdoc_array_style' => true,
             'PhpCsFixerCustomFixers/phpdoc_param_order' => true,
             'phpdoc_add_missing_param_annotation' => true,
