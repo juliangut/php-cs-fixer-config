@@ -13,9 +13,9 @@
     ],
     "require": {
         "php": "^7.3|^8.0",
-        "friendsofphp/php-cs-fixer": "^3.4",
-        "pedrotroller/php-cs-custom-fixer": "^2.24",
-        "kubawerlos/php-cs-fixer-custom-fixers": "^3.5"
+        "friendsofphp/php-cs-fixer": "^2.19|^3.4",
+        "kubawerlos/php-cs-fixer-custom-fixers": "^2.5|^3.5",
+        "pedrotroller/php-cs-custom-fixer": "^2.24"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "~0.7",

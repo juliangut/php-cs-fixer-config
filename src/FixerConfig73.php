@@ -34,7 +34,6 @@ class FixerConfig73 extends AbstractFixerConfig
         return array_merge(
             parent::getCommonRules(),
             [
-                'assign_null_coalescing_to_coalesce_equal' => true,
                 'clean_namespace' => true,
                 'no_unset_cast' => true,
                 'normalize_index_brace' => true,
