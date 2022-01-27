@@ -12,6 +12,10 @@ declare(strict_types=1);
 namespace Jgut\CS\Fixer;
 
 use PedroTroller\CS\Fixer\Fixers as PedroTrollerFixers;
+use PhpCsFixer\Fixer\ControlStructure\EmptyLoopBodyFixer;
+use PhpCsFixer\Fixer\StringNotation\StringLengthToEmptyFixer;
+use PhpCsFixerCustomFixers\Fixer\NoUselessDirnameCallFixer;
+use PhpCsFixerCustomFixers\Fixer\PhpdocArrayStyleFixer;
 use PhpCsFixerCustomFixers\Fixers as KubawerlosFixes;
 use PhpCsFixer\Config;
 use DateTime;
@@ -145,7 +149,7 @@ abstract class AbstractFixerConfig extends Config
      */
     protected function getCommonRules(): array
     {
-        return [
+        $rules = [
             'align_multiline_comment' => true,
             'array_indentation' => true,
             'array_push' => true,
@@ -317,6 +321,20 @@ abstract class AbstractFixerConfig extends Config
                 'less_and_greater' => false,
             ],
         ];
+
+        $removableFixers = [
+            EmptyLoopBodyFixer::class => 'empty_loop_body',
+            StringLengthToEmptyFixer::class => 'string_length_to_empty',
+            NoUselessDirnameCallFixer::class => 'PhpCsFixerCustomFixers/no_useless_dirname_call',
+            PhpdocArrayStyleFixer::class => 'PhpCsFixerCustomFixers/phpdoc_array_style',
+        ];
+        foreach ($removableFixers as $fixerClass => $fixerRule) {
+            if (!class_exists($fixerClass)) {
+                unset($rules[$fixerRule]);
+            }
+        }
+
+        return $rules;
     }
 
     /**
