@@ -36,6 +36,10 @@ class FixerConfig73 extends AbstractFixerConfig
             [
                 'clean_namespace' => true,
                 'no_unset_cast' => true,
+                'native_function_invocation' => [
+                    'include' => ['@compiler_optimized'],
+                    'strict' => true,
+                ],
                 'normalize_index_brace' => true,
                 'trailing_comma_in_multiline' => [
                     'elements' => ['arrays', 'arguments'],
