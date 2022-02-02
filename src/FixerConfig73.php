@@ -13,7 +13,7 @@ namespace Jgut\CS\Fixer;
 
 class FixerConfig73 extends AbstractFixerConfig
 {
-    private const PHP73 = 70300;
+    private const PHP_VERSION = 70300;
 
     /**
      * @inheritDoc
@@ -53,6 +53,6 @@ class FixerConfig73 extends AbstractFixerConfig
      */
     protected function getMinimumPhpVersion(): int
     {
-        return self::PHP73;
+        return self::PHP_VERSION;
     }
 }

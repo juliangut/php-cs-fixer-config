@@ -46,7 +46,11 @@ abstract class AbstractFixerConfig extends Config
     public function __construct()
     {
         if ($this->getMinimumPhpVersion() > \PHP_VERSION_ID) {
-            throw new RuntimeException(sprintf('Minimum required PHP version is "%s".', $this->getMinimumPhpVersion()));
+            throw new RuntimeException(sprintf(
+                'Minimum required PHP version is "%s", current version is "%s".',
+                $this->getMinimumPhpVersion(),
+                \PHP_VERSION_ID,
+            ));
         }
 
         parent::__construct('juliangut/php-cs-fixer-config');
