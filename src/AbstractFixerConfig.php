@@ -11,14 +11,14 @@ declare(strict_types=1);
 
 namespace Jgut\CS\Fixer;
 
+use DateTime;
 use PedroTroller\CS\Fixer\Fixers as PedroTrollerFixers;
+use PhpCsFixer\Config;
 use PhpCsFixer\Fixer\ControlStructure\EmptyLoopBodyFixer;
 use PhpCsFixer\Fixer\StringNotation\StringLengthToEmptyFixer;
 use PhpCsFixerCustomFixers\Fixer\NoUselessDirnameCallFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocArrayStyleFixer;
 use PhpCsFixerCustomFixers\Fixers as KubawerlosFixes;
-use PhpCsFixer\Config;
-use DateTime;
 use RuntimeException;
 
 abstract class AbstractFixerConfig extends Config
@@ -249,6 +249,10 @@ abstract class AbstractFixerConfig extends Config
             'nullable_type_declaration_for_default_null_value' => true,
             'object_operator_without_whitespace' => true,
             'operator_linebreak' => true,
+            'ordered_imports' => [
+                'imports_order' => ['class', 'function', 'const'],
+                'sort_algorithm' => 'alpha',
+            ],
             'PedroTroller/comment_line_to_phpdoc_block' => true,
             'PedroTroller/exceptions_punctuation' => true,
             'PedroTroller/line_break_between_method_arguments' => [
