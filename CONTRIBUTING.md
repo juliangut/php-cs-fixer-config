@@ -9,3 +9,4 @@ Find here a few rules to follow in order to keep the code clean and easy to revi
 - Follow **[PSR-12](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-12-extended-coding-style-guide.md)** coding standard
 - Keep documentation **updated**
 - Just **one pull request per fix or feature** only
+- Check that **[GitHub Actions](https://github.com/juliangut/php-cs-fixer-config/actions)** build passed

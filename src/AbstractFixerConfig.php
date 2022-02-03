@@ -45,11 +45,11 @@ abstract class AbstractFixerConfig extends Config
 
     public function __construct()
     {
-        if ($this->getMinimumPhpVersion() > \PHP_VERSION_ID) {
+        if (version_compare($this->getRequiredPhpVersion(), \PHP_VERSION, '>')) {
             throw new RuntimeException(sprintf(
                 'Minimum required PHP version is "%s", current version is "%s".',
-                $this->getMinimumPhpVersion(),
-                \PHP_VERSION_ID,
+                $this->getRequiredPhpVersion(),
+                \PHP_VERSION,
             ));
         }
 
@@ -64,7 +64,7 @@ abstract class AbstractFixerConfig extends Config
         ));
     }
 
-    abstract protected function getMinimumPhpVersion(): int;
+    abstract protected function getRequiredPhpVersion(): string;
 
     /**
      * @inheritDoc
@@ -132,13 +132,14 @@ abstract class AbstractFixerConfig extends Config
     }
 
     /**
+     * These are experimental rules.
+     *
      * @return array<string, bool|array<string, mixed>>
      */
     private function getTypeInferRules(): array
     {
         return $this->typeInfer === true
             ? [
-                // Watch out! these are experimental rules
                 'phpdoc_to_param_type' => true,
                 'phpdoc_to_property_type' => true,
                 'phpdoc_to_return_type' => true,
