@@ -11,46 +11,51 @@ declare(strict_types=1);
 
 namespace Jgut\CS\Fixer;
 
+use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
+use PhpCsFixer\Fixer\LanguageConstruct\GetClassToClassKeywordFixer;
+use PhpCsFixer\Fixer\Operator\AssignNullCoalescingToCoalesceEqualFixer;
+use PhpCsFixerCustomFixers\Fixer\StringableInterfaceFixer;
+
 class FixerConfig80 extends AbstractFixerConfig
 {
-    /**
-     * @inheritDoc
-     */
-    protected function getRulesets(): array
-    {
-        return [
-            '@PSR12' => true,
-            '@PHP80Migration' => true,
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getCommonRules(): array
-    {
-        return array_merge(
-            parent::getCommonRules(),
-            [
-                'get_class_to_class_keyword' => true,
-                'modernize_strpos' => true,
-                'PhpCsFixerCustomFixers/numeric_literal_separator' => [
-                    'decimal' => true,
-                    'float' => true,
-                ],
-                'PhpCsFixerCustomFixers/stringable_interface' => true,
-                'trailing_comma_in_multiline' => [
-                    'elements' => ['arrays', 'arguments', 'parameters'],
-                ],
-            ],
-        );
-    }
-
     /**
      * @inheritDoc
      */
     protected function getRequiredPhpVersion(): string
     {
         return '8.0.0';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getFixerRules(): array
+    {
+        $rules = parent::getFixerRules();
+
+        $rules['PhpCsFixerCustomFixers/numeric_literal_separator'] = [
+            'decimal' => true,
+            'float' => true,
+        ];
+
+        // PHP-CS-Fixer 3.5
+        if (class_exists(GetClassToClassKeywordFixer::class)) {
+            $rules['get_class_to_class_keyword'] = true;
+        }
+
+        // PHP-CS-Fixer 3.2
+        if (class_exists(AssignNullCoalescingToCoalesceEqualFixer::class)) {
+            $rules['assign_null_coalescing_to_coalesce_equal'] = true;
+        }
+        if (class_exists(ModernizeStrposFixer::class)) {
+            $rules['modernize_strpos'] = true;
+        }
+
+        // kubawerlos/php-cs-fixer-custom-fixers 3.0
+        if (class_exists(StringableInterfaceFixer::class)) {
+            $rules['PhpCsFixerCustomFixers/stringable_interface'] = true;
+        }
+
+        return $rules;
     }
 }

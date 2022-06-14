@@ -11,45 +11,42 @@ declare(strict_types=1);
 
 namespace Jgut\CS\Fixer;
 
+use PhpCsFixer\Fixer\Operator\AssignNullCoalescingToCoalesceEqualFixer;
+
 class FixerConfig74 extends AbstractFixerConfig
 {
-    /**
-     * @inheritDoc
-     */
-    protected function getRulesets(): array
-    {
-        return [
-            '@PSR12' => true,
-            '@PHP74Migration' => true,
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getCommonRules(): array
-    {
-        return array_merge(
-            parent::getCommonRules(),
-            [
-                'clean_namespace' => true,
-                'no_unset_cast' => true,
-                'PhpCsFixerCustomFixers/numeric_literal_separator' => [
-                    'decimal' => true,
-                    'float' => true,
-                ],
-                'trailing_comma_in_multiline' => [
-                    'elements' => ['arrays', 'arguments'],
-                ],
-            ],
-        );
-    }
-
     /**
      * @inheritDoc
      */
     protected function getRequiredPhpVersion(): string
     {
         return '7.4.0';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getFixerRules(): array
+    {
+        $rules = array_merge(
+            parent::getFixerRules(),
+            [
+                'PhpCsFixerCustomFixers/numeric_literal_separator' => [
+                    'decimal' => true,
+                    'float' => true,
+                ],
+                'trailing_comma_in_multiline' => [
+                    'elements' => ['arrays', 'arguments'],
+                    'after_heredoc' => true,
+                ],
+            ],
+        );
+
+        // PHP-CS-Fixer 3.2
+        if (class_exists(AssignNullCoalescingToCoalesceEqualFixer::class)) {
+            $rules['assign_null_coalescing_to_coalesce_equal'] = true;
+        }
+
+        return $rules;
     }
 }

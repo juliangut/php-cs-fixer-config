@@ -50,25 +50,19 @@ Add `.php-cs-fixer.cache` to your `.gitignore` file
 
 ### Configurations
 
-#### Additional rules
-
-Additional rules can be added, this rules can be new or override rules already set
-
-```php
-return (new FixerConfig80($header))
-    ->setAdditionalRules([
-        'single_line_throw' => true,
-    ])
-    ->setFinder($finder);
-```
-
 #### Header
 
-Provide a header string, it will be prepended to every file analysed by php-cs-fixer. The string `{{year}}` will be replaced by the current year
+Provide a header string, it will be prepended to every file analysed by php-cs-fixer.
+
+The string `{{year}}` will be replaced by the current year, and the string `{{package}}` will be replaced by your package name
 
 ```php
 return (new FixerConfig80())
-    ->setHeader('(c) 2021-{{year}} Julián Gutiérrez <juliangut@gmail.com>');
+    ->setHeader(<<<'HEADER'
+(c) 2021-{{year}} Julián Gutiérrez <juliangut@gmail.com>
+
+This file is part of package {{package}}
+HEADER);
 ```
 
 ```diff
@@ -78,6 +72,8 @@ return (new FixerConfig80())
 
 +/*
 + * (c) 2021-2022 Julián Gutiérrez <juliangut@gmail.com>
++ *
++ * This file is part of package juliangut/php-cs-fixer-config
 + */
 +
  declare(strict_types=1);
@@ -158,6 +154,40 @@ return (new FixerConfig80())
         return $this->baz;
      }
  }
+```
+
+#### Additional rules
+
+Additional rules can be added, this rules can be new or override rules already set
+
+```php
+return (new FixerConfig80())
+    ->setHeader($header)
+    ->setAdditionalRules([
+        'single_line_throw' => true,
+    ])
+    ->setFinder($finder);
+```
+
+#### Custom fixer config
+
+If you need more control over applied rules or prefer a cleaner setup, you can easily create your custom fixer config instead of setting additional rules
+
+```php
+use Jgut\CS\Fixer\FixerConfig80;
+
+class CustomFixerConfig extends FixerConfig80
+{
+    protected function getRequiredPhpVersion(): string
+    {
+        return '8.1.0';
+    }
+
+    protected function getFixerRules(): array
+    {
+        // Return your custom rules, or add/remove rules from parent::getFixerRules()
+    }
+}
 ```
 
 ## Contributing

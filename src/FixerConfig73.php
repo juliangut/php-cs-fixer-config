@@ -16,41 +16,24 @@ class FixerConfig73 extends AbstractFixerConfig
     /**
      * @inheritDoc
      */
-    protected function getRulesets(): array
-    {
-        return [
-            '@PSR12' => true,
-            '@PHP73Migration' => true,
-        ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getCommonRules(): array
-    {
-        return array_merge(
-            parent::getCommonRules(),
-            [
-                'clean_namespace' => true,
-                'no_unset_cast' => true,
-                'native_function_invocation' => [
-                    'include' => ['@compiler_optimized'],
-                    'strict' => true,
-                ],
-                'normalize_index_brace' => true,
-                'trailing_comma_in_multiline' => [
-                    'elements' => ['arrays', 'arguments'],
-                ],
-            ],
-        );
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function getRequiredPhpVersion(): string
     {
         return '7.3.0';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getFixerRules(): array
+    {
+        return array_merge(
+            parent::getFixerRules(),
+            [
+                'trailing_comma_in_multiline' => [
+                    'elements' => ['arrays', 'arguments'],
+                    'after_heredoc' => true,
+                ],
+            ],
+        );
     }
 }
