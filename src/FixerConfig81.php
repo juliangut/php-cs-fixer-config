@@ -59,12 +59,12 @@ class FixerConfig81 extends AbstractFixerConfig
 
         // kubawerlos/php-cs-fixer-custom-fixers 3.1
         if (class_exists(MultilinePromotedPropertiesFixer::class)) {
-            $rules['PhpCsFixerCustomFixers/multiline_promoted_properties'] = [
-                'promote_only_existing_properties' => false,
-            ];
+            $rules['PhpCsFixerCustomFixers/multiline_promoted_properties'] = true;
         }
         if (class_exists(PromotedConstructorPropertyFixer::class)) {
-            $rules['PhpCsFixerCustomFixers/promoted_constructor_property'] = true;
+            $rules['PhpCsFixerCustomFixers/promoted_constructor_property'] = [
+                'promote_only_existing_properties' => false,
+            ];
         }
 
         // kubawerlos/php-cs-fixer-custom-fixers 3.0
