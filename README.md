@@ -158,13 +158,19 @@ return (new FixerConfig80())
 
 #### Additional rules
 
-Additional rules can be added, this rules can be new or override rules already set
+If you need to add a few additional rules, this rules can be new or override rules already set, the easiest way is using `setAdditionalRules` method
+
+It is preferred to identify fixers by their class name, anyway using fixer names will work as well
 
 ```php
+use Jgut\CS\Fixer\FixerConfig80;
+use PhpCsFixer\Fixer\FunctionNotation\SingleLineThrowFixer;
+
 return (new FixerConfig80())
     ->setHeader($header)
     ->setAdditionalRules([
-        'single_line_throw' => true,
+        SingleLineThrowFixer::class => true, // Preferred way
+        'single_line_throw' => true, // Same as before
     ])
     ->setFinder($finder);
 ```
@@ -175,6 +181,7 @@ If you need more control over applied rules or prefer a cleaner setup, you can e
 
 ```php
 use Jgut\CS\Fixer\FixerConfig80;
+use PhpCsFixer\Fixer\FunctionNotation\SingleLineThrowFixer;
 
 class CustomFixerConfig extends FixerConfig80
 {
@@ -185,7 +192,14 @@ class CustomFixerConfig extends FixerConfig80
 
     protected function getFixerRules(): array
     {
-        // Return your custom rules, or add/remove rules from parent::getFixerRules()
+        // Return your custom rules, or add/remove rules from parent's getFixerRules()
+        return array_merge(
+            parent::getFixerRules(),
+            [
+                SingleLineThrowFixer::class => true, // Preferred way
+                'single_line_throw' => true, // Same as before
+            ]
+        );
     }
 }
 ```

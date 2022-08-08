@@ -32,18 +32,31 @@ class FixerConfig80 extends AbstractFixerConfig
      */
     protected function getFixerRules(): array
     {
-        return array_merge(
-            parent::getFixerRules(),
-            [
-                AssignNullCoalescingToCoalesceEqualFixer::class => true,
-                GetClassToClassKeywordFixer::class => true,
-                ModernizeStrposFixer::class => true,
-                NumericLiteralSeparatorFixer::class => [
-                    'decimal' => true,
-                    'float' => true,
-                ],
-                StringableInterfaceFixer::class => true,
-            ],
-        );
+        $rules = parent::getFixerRules();
+
+        $rules[NumericLiteralSeparatorFixer::class] = [
+            'decimal' => true,
+            'float' => true,
+        ];
+
+        // PHP-CS-Fixer 3.5
+        if (class_exists(GetClassToClassKeywordFixer::class)) {
+            $rules[GetClassToClassKeywordFixer::class] = true;
+        }
+
+        // PHP-CS-Fixer 3.2
+        if (class_exists(AssignNullCoalescingToCoalesceEqualFixer::class)) {
+            $rules[AssignNullCoalescingToCoalesceEqualFixer::class] = true;
+        }
+        if (class_exists(ModernizeStrposFixer::class)) {
+            $rules[ModernizeStrposFixer::class] = true;
+        }
+
+        // kubawerlos/php-cs-fixer-custom-fixers 3.0
+        if (class_exists(StringableInterfaceFixer::class)) {
+            $rules[StringableInterfaceFixer::class] = true;
+        }
+
+        return $rules;
     }
 }

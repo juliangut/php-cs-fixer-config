@@ -30,7 +30,7 @@ class FixerConfig74 extends AbstractFixerConfig
      */
     protected function getFixerRules(): array
     {
-        return array_merge(
+        $rules = array_merge(
             parent::getFixerRules(),
             [
                 AssignNullCoalescingToCoalesceEqualFixer::class => true,
@@ -44,5 +44,12 @@ class FixerConfig74 extends AbstractFixerConfig
                 ],
             ],
         );
+
+        // PHP-CS-Fixer 3.2
+        if (class_exists(AssignNullCoalescingToCoalesceEqualFixer::class)) {
+            $rules[AssignNullCoalescingToCoalesceEqualFixer::class] = true;
+        }
+
+        return $rules;
     }
 }

@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -22,7 +22,7 @@ jobs:
           coverage: none
 
       - name: Composer install
-        uses: ramsey/composer-install@v1
+        uses: ramsey/composer-install@v2
         with:
           composer-options: "--prefer-dist"
 
@@ -42,13 +42,16 @@ jobs:
       fail-fast: false
       matrix:
         php: ${{ fromJson(needs.prepare_env.outputs.php) }}
+        dependency:
+          - lowest
+          - highest
 
     name: Analyse on PHP ${{ matrix.php }}
 
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -56,8 +59,9 @@ jobs:
           coverage: none
 
       - name: Composer install
-        uses: ramsey/composer-install@v1
+        uses: ramsey/composer-install@v2
         with:
+          dependency-version: ${{ matrix.dependency }}
           composer-options: "--prefer-dist"
 
       - name: Run PHP linting

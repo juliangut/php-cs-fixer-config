@@ -217,6 +217,7 @@ use PhpCsFixerCustomFixers\Fixer\PhpdocSelfAccessorFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocTypesCommaSpacesFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocTypesTrimFixer;
 use PhpCsFixerCustomFixers\Fixers as KubawerlosFixes;
+use PHPUnit\Framework\Test;
 use ReflectionClass;
 use RuntimeException;
 
@@ -344,7 +345,6 @@ abstract class AbstractFixerConfig extends Config
                     'trait_import' => 'none',
                 ],
             ],
-            ClassReferenceNameCasingFixer::class => true,
             CleanNamespaceFixer::class => true,
             CombineConsecutiveIssetsFixer::class => true,
             CombineConsecutiveUnsetsFixer::class => true,
@@ -357,18 +357,13 @@ abstract class AbstractFixerConfig extends Config
             ControlStructureContinuationPositionFixer::class => [
                 'position' => 'same_line',
             ],
-            DateTimeCreateFromFormatCallFixer::class => true,
             DateTimeImmutableFixer::class => true,
-            DeclareParenthesesFixer::class => true,
             DeclareStrictTypesFixer::class => true,
             DirConstantFixer::class => true,
             EchoTagSyntaxFixer::class => [
                 'format' => 'long',
                 'long_function' => 'echo',
                 'shorten_simple_statements_only' => true,
-            ],
-            EmptyLoopBodyFixer::class => [
-                'style' => 'braces',
             ],
             EregToPregFixer::class => true,
             ErrorSuppressionFixer::class => [
@@ -420,9 +415,7 @@ abstract class AbstractFixerConfig extends Config
             IncrementStyleFixer::class => [
                 'style' => 'pre',
             ],
-            IntegerLiteralCaseFixer::class => true,
             IsNullFixer::class => true,
-            IssetToArrayKeyExistsFixer::class => true,
             LambdaNotUsedImportFixer::class => true,
             LinebreakAfterOpeningTagFixer::class => true,
             LineBreakBetweenMethodArgumentsFixer::class => [
@@ -467,7 +460,6 @@ abstract class AbstractFixerConfig extends Config
             NoBinaryStringFixer::class => true,
             NoBlankLinesAfterPhpdocFixer::class => true,
             NoCommentedOutCodeFixer::class => true,
-            NoDuplicatedArrayKeyFixer::class => true,
             NoEmptyCommentFixer::class => true,
             NoEmptyPhpdocFixer::class => true,
             NoEmptyStatementFixer::class => true,
@@ -496,8 +488,6 @@ abstract class AbstractFixerConfig extends Config
                 'allow_unused_params' => false,
             ],
             NoTrailingCommaInSinglelineArrayFixer::class => true,
-            NoTrailingCommaInSinglelineFixer::class => true,
-            NoTrailingCommaInSinglelineFunctionCallFixer::class => true,
             NoTrailingWhitespaceInStringFixer::class => true,
             NoUnneededControlParenthesesFixer::class => [
                 'statements' => ['break', 'clone', 'continue', 'echo_print', 'return', 'switch_case', 'yield'],
@@ -508,15 +498,12 @@ abstract class AbstractFixerConfig extends Config
             NoUnneededFinalMethodFixer::class => [
                 'private_methods' => true,
             ],
-            NoUnneededImportAliasFixer::class => true,
             NoUnreachableDefaultArgumentValueFixer::class => true,
             NoUnsetCastFixer::class => true,
             NoUnsetOnPropertyFixer::class => true,
             NoUnusedImportsFixer::class => true,
             NoUselessCommentFixer::class => true,
-            NoUselessDirnameCallFixer::class => true,
             NoUselessElseFixer::class => true,
-            NoUselessParenthesisFixer::class => true,
             NoUselessReturnFixer::class => true,
             NoUselessSprintfFixer::class => true,
             NoWhitespaceBeforeCommaInArrayFixer::class => [
@@ -546,7 +533,6 @@ abstract class AbstractFixerConfig extends Config
                 'tags' => ['method', 'param', 'property', 'return', 'throws', 'type', 'var'],
             ],
             PhpdocAnnotationWithoutDotFixer::class => true,
-            PhpdocArrayStyleFixer::class => true,
             PhpdocIndentFixer::class => true,
             PhpdocInlineTagNormalizerFixer::class => true,
             PhpdocLineSpanFixer::class => [
@@ -597,7 +583,6 @@ abstract class AbstractFixerConfig extends Config
             ],
             PhpdocTrimConsecutiveBlankLineSeparationFixer::class => true,
             PhpdocTrimFixer::class => true,
-            PhpdocTypesCommaSpacesFixer::class => true,
             PhpdocTypesFixer::class => true,
             PhpdocTypesOrderFixer::class => [
                 'sort_algorithm' => 'none',
@@ -618,7 +603,6 @@ abstract class AbstractFixerConfig extends Config
             SimpleToComplexStringVariableFixer::class => true,
             SimplifiedIfReturnFixer::class => true,
             SimplifiedNullReturnFixer::class => true,
-            SingleLineCommentSpacingFixer::class => true,
             SingleLineCommentStyleFixer::class => [
                 'comment_types' => ['asterisk', 'hash'],
             ],
@@ -635,7 +619,6 @@ abstract class AbstractFixerConfig extends Config
             StrictComparisonFixer::class => true,
             StrictParamFixer::class => true,
             StringLineEndingFixer::class => true,
-            StringLengthToEmptyFixer::class => true,
             SwitchContinueToBreakFixer::class => true,
             TernaryToElvisOperatorFixer::class => true,
             TernaryToNullCoalescingFixer::class => true,
@@ -644,9 +627,6 @@ abstract class AbstractFixerConfig extends Config
                 'after_heredoc' => true,
             ],
             TrimArraySpacesFixer::class => true,
-            TypesSpacesFixer::class => [
-                'space' => 'none',
-            ],
             UnaryOperatorSpacesFixer::class => true,
             UseArrowFunctionsFixer::class => true,
             VoidReturnFixer::class => true,
@@ -658,6 +638,87 @@ abstract class AbstractFixerConfig extends Config
                 'always_move_variable' => false,
             ],
         ];
+
+        // PHP-CS-Fixer 3.8
+        if (class_exists(DateTimeCreateFromFormatCallFixer::class)) {
+            $rules[DateTimeCreateFromFormatCallFixer::class] = true;
+        }
+
+        // PHP-CS-Fixer 3.7
+        if (class_exists(NoTrailingCommaInSinglelineFunctionCallFixer::class)) {
+            $rules[NoTrailingCommaInSinglelineFunctionCallFixer::class] = true;
+        }
+        if (class_exists(SingleLineCommentSpacingFixer::class)) {
+            $rules[SingleLineCommentSpacingFixer::class] = true;
+        }
+
+        // PHP-CS-Fixer 3.6
+        if (class_exists(ClassReferenceNameCasingFixer::class)) {
+            $rules[ClassReferenceNameCasingFixer::class] = true;
+        }
+        if (class_exists(NoUnneededImportAliasFixer::class)) {
+            $rules[NoUnneededImportAliasFixer::class] = true;
+        }
+
+        // PHP-CS-Fixer 3.4
+        if (class_exists(DeclareParenthesesFixer::class)) {
+            $rules[DeclareParenthesesFixer::class] = true;
+        }
+
+        // PHP-CS-Fixer 3.2
+        if (class_exists(IntegerLiteralCaseFixer::class)) {
+            $rules[IntegerLiteralCaseFixer::class] = true;
+        }
+        if (class_exists(StringLengthToEmptyFixer::class)) {
+            $rules[StringLengthToEmptyFixer::class] = true;
+        }
+
+        // PHP-CS-Fixer 3.1
+        if (class_exists(EmptyLoopBodyFixer::class)) {
+            $rules[EmptyLoopBodyFixer::class] = [
+                'style' => 'braces',
+            ];
+        }
+        if (class_exists(TypesSpacesFixer::class)) {
+            $rules[TypesSpacesFixer::class] = [
+                'space' => 'none',
+            ];
+        }
+
+        // kubawerlos/php-cs-fixer-custom-fixers 3.9
+        if (class_exists(PhpdocTypesCommaSpacesFixer::class)) {
+            $rules[PhpdocTypesCommaSpacesFixer::class] = true;
+        }
+
+        // kubawerlos/php-cs-fixer-custom-fixers 3.7
+        if (class_exists(NoTrailingCommaInSinglelineFixer::class)) {
+            $rules[NoTrailingCommaInSinglelineFixer::class] = true;
+        }
+
+        // kubawerlos/php-cs-fixer-custom-fixers 3.6
+        if (class_exists(IssetToArrayKeyExistsFixer::class)) {
+            $rules[IssetToArrayKeyExistsFixer::class] = true;
+        }
+
+        // kubawerlos/php-cs-fixer-custom-fixers 3.5
+        if (class_exists(NoUselessDirnameCallFixer::class)) {
+            $rules[NoUselessDirnameCallFixer::class] = true;
+        }
+
+        // kubawerlos/php-cs-fixer-custom-fixers 3.1
+        if (class_exists(PhpdocArrayStyleFixer::class)) {
+            $rules[PhpdocArrayStyleFixer::class] = true;
+        }
+
+        // kubawerlos/php-cs-fixer-custom-fixers 3.0
+        if (class_exists(NoDuplicatedArrayKeyFixer::class)) {
+            $rules[NoDuplicatedArrayKeyFixer::class] = [
+                'ignore_expressions' => true,
+            ];
+        }
+        if (class_exists(NoUselessParenthesisFixer::class)) {
+            $rules[NoUselessParenthesisFixer::class] = true;
+        }
 
         return array_merge(
             $rules,
@@ -674,6 +735,10 @@ abstract class AbstractFixerConfig extends Config
     {
         if ($this->phpUnit === false) {
             return [];
+        }
+
+        if (!class_exists(Test::class)) {
+            throw new RuntimeException('PHPUnit rules cannot be used as PHPUnit is not installed.');
         }
 
         return [
