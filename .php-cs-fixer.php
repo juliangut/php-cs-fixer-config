@@ -4,7 +4,7 @@
  * (c) 2021-2022 Julián Gutiérrez <juliangut@gmail.com>
  *
  * @license BSD-3-Clause
- * @see https://github.com/juliangut/php-cs-fixer-config
+ * @link https://github.com/juliangut/php-cs-fixer-config
  */
 
 declare(strict_types=1);
@@ -16,7 +16,7 @@ $header = <<<'HEADER'
 (c) 2021-{{year}} Julián Gutiérrez <juliangut@gmail.com>
 
 @license BSD-3-Clause
-@see https://github.com/juliangut/php-cs-fixer-config
+@link https://github.com/juliangut/php-cs-fixer-config
 HEADER;
 
 $finder = Finder::create()

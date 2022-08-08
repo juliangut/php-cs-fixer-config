@@ -3,6 +3,10 @@ includes:
 
 parameters:
   level: max
+  reportUnmatchedIgnoredErrors: true
+  checkMissingCallableSignature: true
+  tipsOfTheDay: false
+  errorFormat: compact
   parallel:
     maximumNumberOfProcesses: 7
   paths:

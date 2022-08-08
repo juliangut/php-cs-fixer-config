@@ -20,12 +20,17 @@ lint:
 	make --no-print-directory lint-phpcs-fixer
 
 
+.PHONY: fix-phpcbf
+fix-phpcbf:
+	vendor/bin/phpcbf --standard=PSR12 src
+
 .PHONY: fix-phpcs-fixer
 fix-phpcs-fixer:
 	vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --verbose --ansi
 
 .PHONY: fix
 fix:
+	make --no-print-directory fix-phpcbf && \
 	make --no-print-directory fix-phpcs-fixer
 
 
@@ -47,7 +52,7 @@ qa-compatibility:
 
 .PHONY: qa-phpstan
 qa-phpstan:
-	vendor/bin/phpstan analyse --configuration=phpstan.neon --memory-limit=2G --no-progress --error-format compact
+	vendor/bin/phpstan analyse --memory-limit=2G --no-progress
 
 .PHONY: qa
 qa:

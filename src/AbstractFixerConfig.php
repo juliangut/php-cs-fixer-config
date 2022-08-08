@@ -4,7 +4,7 @@
  * (c) 2021-2022 Julián Gutiérrez <juliangut@gmail.com>
  *
  * @license BSD-3-Clause
- * @see https://github.com/juliangut/php-cs-fixer-config
+ * @link https://github.com/juliangut/php-cs-fixer-config
  */
 
 declare(strict_types=1);
@@ -12,27 +12,212 @@ declare(strict_types=1);
 namespace Jgut\CS\Fixer;
 
 use Composer\InstalledVersions;
-use DateTime;
+use DateTimeImmutable;
+use PedroTroller\CS\Fixer\CodingStyle\ExceptionsPunctuationFixer;
+use PedroTroller\CS\Fixer\CodingStyle\ForbiddenFunctionsFixer;
+use PedroTroller\CS\Fixer\CodingStyle\LineBreakBetweenMethodArgumentsFixer;
+use PedroTroller\CS\Fixer\Comment\CommentLineToPhpdocBlockFixer;
 use PedroTroller\CS\Fixer\Fixers as PedroTrollerFixers;
 use PhpCsFixer\Config;
+use PhpCsFixer\Fixer\Alias\ArrayPushFixer;
+use PhpCsFixer\Fixer\Alias\BacktickToShellExecFixer;
+use PhpCsFixer\Fixer\Alias\EregToPregFixer;
+use PhpCsFixer\Fixer\Alias\MbStrFunctionsFixer;
+use PhpCsFixer\Fixer\Alias\NoAliasFunctionsFixer;
+use PhpCsFixer\Fixer\Alias\NoAliasLanguageConstructCallFixer;
+use PhpCsFixer\Fixer\Alias\NoMixedEchoPrintFixer;
+use PhpCsFixer\Fixer\Alias\PowToExponentiationFixer;
+use PhpCsFixer\Fixer\Alias\RandomApiMigrationFixer;
+use PhpCsFixer\Fixer\Alias\SetTypeToCastFixer;
+use PhpCsFixer\Fixer\ArrayNotation\NoMultilineWhitespaceAroundDoubleArrowFixer;
+use PhpCsFixer\Fixer\ArrayNotation\NormalizeIndexBraceFixer;
+use PhpCsFixer\Fixer\ArrayNotation\NoTrailingCommaInSinglelineArrayFixer;
+use PhpCsFixer\Fixer\ArrayNotation\NoWhitespaceBeforeCommaInArrayFixer;
+use PhpCsFixer\Fixer\ArrayNotation\TrimArraySpacesFixer;
+use PhpCsFixer\Fixer\ArrayNotation\WhitespaceAfterCommaInArrayFixer;
+use PhpCsFixer\Fixer\Basic\BracesFixer;
+use PhpCsFixer\Fixer\Basic\NonPrintableCharacterFixer;
+use PhpCsFixer\Fixer\Basic\PsrAutoloadingFixer;
 use PhpCsFixer\Fixer\Casing\ClassReferenceNameCasingFixer;
 use PhpCsFixer\Fixer\Casing\IntegerLiteralCaseFixer;
+use PhpCsFixer\Fixer\Casing\MagicConstantCasingFixer;
+use PhpCsFixer\Fixer\Casing\MagicMethodCasingFixer;
+use PhpCsFixer\Fixer\Casing\NativeFunctionCasingFixer;
+use PhpCsFixer\Fixer\Casing\NativeFunctionTypeDeclarationCasingFixer;
+use PhpCsFixer\Fixer\CastNotation\CastSpacesFixer;
+use PhpCsFixer\Fixer\CastNotation\ModernizeTypesCastingFixer;
+use PhpCsFixer\Fixer\CastNotation\NoShortBoolCastFixer;
+use PhpCsFixer\Fixer\CastNotation\NoUnsetCastFixer;
+use PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer;
+use PhpCsFixer\Fixer\ClassNotation\NoNullPropertyInitializationFixer;
+use PhpCsFixer\Fixer\ClassNotation\NoPhp4ConstructorFixer;
+use PhpCsFixer\Fixer\ClassNotation\NoUnneededFinalMethodFixer;
+use PhpCsFixer\Fixer\ClassNotation\ProtectedToPrivateFixer;
+use PhpCsFixer\Fixer\ClassNotation\SelfAccessorFixer;
+use PhpCsFixer\Fixer\ClassNotation\SelfStaticAccessorFixer;
+use PhpCsFixer\Fixer\ClassUsage\DateTimeImmutableFixer;
+use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
+use PhpCsFixer\Fixer\Comment\MultilineCommentOpeningClosingFixer;
+use PhpCsFixer\Fixer\Comment\NoEmptyCommentFixer;
 use PhpCsFixer\Fixer\Comment\SingleLineCommentSpacingFixer;
+use PhpCsFixer\Fixer\Comment\SingleLineCommentStyleFixer;
+use PhpCsFixer\Fixer\ConstantNotation\NativeConstantInvocationFixer;
+use PhpCsFixer\Fixer\ControlStructure\ControlStructureContinuationPositionFixer;
 use PhpCsFixer\Fixer\ControlStructure\EmptyLoopBodyFixer;
+use PhpCsFixer\Fixer\ControlStructure\IncludeFixer;
+use PhpCsFixer\Fixer\ControlStructure\NoAlternativeSyntaxFixer;
+use PhpCsFixer\Fixer\ControlStructure\NoSuperfluousElseifFixer;
+use PhpCsFixer\Fixer\ControlStructure\NoUnneededControlParenthesesFixer;
+use PhpCsFixer\Fixer\ControlStructure\NoUnneededCurlyBracesFixer;
+use PhpCsFixer\Fixer\ControlStructure\NoUselessElseFixer;
+use PhpCsFixer\Fixer\ControlStructure\SimplifiedIfReturnFixer;
+use PhpCsFixer\Fixer\ControlStructure\SwitchContinueToBreakFixer;
+use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
+use PhpCsFixer\Fixer\ControlStructure\YodaStyleFixer;
+use PhpCsFixer\Fixer\FixerInterface;
+use PhpCsFixer\Fixer\FunctionNotation\CombineNestedDirnameFixer;
 use PhpCsFixer\Fixer\FunctionNotation\DateTimeCreateFromFormatCallFixer;
+use PhpCsFixer\Fixer\FunctionNotation\FopenFlagOrderFixer;
+use PhpCsFixer\Fixer\FunctionNotation\FopenFlagsFixer;
+use PhpCsFixer\Fixer\FunctionNotation\FunctionTypehintSpaceFixer;
+use PhpCsFixer\Fixer\FunctionNotation\ImplodeCallFixer;
+use PhpCsFixer\Fixer\FunctionNotation\LambdaNotUsedImportFixer;
+use PhpCsFixer\Fixer\FunctionNotation\MethodArgumentSpaceFixer;
+use PhpCsFixer\Fixer\FunctionNotation\NativeFunctionInvocationFixer;
 use PhpCsFixer\Fixer\FunctionNotation\NoTrailingCommaInSinglelineFunctionCallFixer;
+use PhpCsFixer\Fixer\FunctionNotation\NoUnreachableDefaultArgumentValueFixer;
+use PhpCsFixer\Fixer\FunctionNotation\NoUselessSprintfFixer;
+use PhpCsFixer\Fixer\FunctionNotation\NullableTypeDeclarationForDefaultNullValueFixer;
+use PhpCsFixer\Fixer\FunctionNotation\PhpdocToParamTypeFixer;
+use PhpCsFixer\Fixer\FunctionNotation\PhpdocToPropertyTypeFixer;
+use PhpCsFixer\Fixer\FunctionNotation\PhpdocToReturnTypeFixer;
+use PhpCsFixer\Fixer\FunctionNotation\RegularCallableCallFixer;
+use PhpCsFixer\Fixer\FunctionNotation\StaticLambdaFixer;
+use PhpCsFixer\Fixer\FunctionNotation\UseArrowFunctionsFixer;
+use PhpCsFixer\Fixer\FunctionNotation\VoidReturnFixer;
+use PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer;
+use PhpCsFixer\Fixer\Import\GlobalNamespaceImportFixer;
 use PhpCsFixer\Fixer\Import\NoUnneededImportAliasFixer;
+use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
+use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
+use PhpCsFixer\Fixer\LanguageConstruct\CombineConsecutiveIssetsFixer;
+use PhpCsFixer\Fixer\LanguageConstruct\CombineConsecutiveUnsetsFixer;
 use PhpCsFixer\Fixer\LanguageConstruct\DeclareParenthesesFixer;
+use PhpCsFixer\Fixer\LanguageConstruct\DirConstantFixer;
+use PhpCsFixer\Fixer\LanguageConstruct\ErrorSuppressionFixer;
+use PhpCsFixer\Fixer\LanguageConstruct\ExplicitIndirectVariableFixer;
+use PhpCsFixer\Fixer\LanguageConstruct\FunctionToConstantFixer;
+use PhpCsFixer\Fixer\LanguageConstruct\IsNullFixer;
+use PhpCsFixer\Fixer\LanguageConstruct\NoUnsetOnPropertyFixer;
+use PhpCsFixer\Fixer\LanguageConstruct\SingleSpaceAfterConstructFixer;
+use PhpCsFixer\Fixer\ListNotation\ListSyntaxFixer;
+use PhpCsFixer\Fixer\NamespaceNotation\CleanNamespaceFixer;
+use PhpCsFixer\Fixer\NamespaceNotation\NoLeadingNamespaceWhitespaceFixer;
+use PhpCsFixer\Fixer\Naming\NoHomoglyphNamesFixer;
+use PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer;
+use PhpCsFixer\Fixer\Operator\ConcatSpaceFixer;
+use PhpCsFixer\Fixer\Operator\IncrementStyleFixer;
+use PhpCsFixer\Fixer\Operator\LogicalOperatorsFixer;
+use PhpCsFixer\Fixer\Operator\ObjectOperatorWithoutWhitespaceFixer;
+use PhpCsFixer\Fixer\Operator\OperatorLinebreakFixer;
+use PhpCsFixer\Fixer\Operator\StandardizeIncrementFixer;
+use PhpCsFixer\Fixer\Operator\StandardizeNotEqualsFixer;
+use PhpCsFixer\Fixer\Operator\TernaryToElvisOperatorFixer;
+use PhpCsFixer\Fixer\Operator\TernaryToNullCoalescingFixer;
+use PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer;
+use PhpCsFixer\Fixer\Phpdoc\AlignMultilineCommentFixer;
+use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocAnnotationRemoveFixer;
+use PhpCsFixer\Fixer\Phpdoc\GeneralPhpdocTagRenameFixer;
+use PhpCsFixer\Fixer\Phpdoc\NoBlankLinesAfterPhpdocFixer;
+use PhpCsFixer\Fixer\Phpdoc\NoEmptyPhpdocFixer;
+use PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocAddMissingParamAnnotationFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocAlignFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocAnnotationWithoutDotFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocIndentFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocInlineTagNormalizerFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocLineSpanFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocNoAccessFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocNoAliasTagFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocNoEmptyReturnFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocNoPackageFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocNoUselessInheritdocFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocOrderFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocReturnSelfReferenceFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocScalarFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocSeparationFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocSingleLineVarSpacingFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocSummaryFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocTagCasingFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocTagTypeFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocTrimConsecutiveBlankLineSeparationFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocTrimFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocTypesFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocTypesOrderFixer;
+use PhpCsFixer\Fixer\Phpdoc\PhpdocVarWithoutNameFixer;
+use PhpCsFixer\Fixer\PhpTag\EchoTagSyntaxFixer;
+use PhpCsFixer\Fixer\PhpTag\LinebreakAfterOpeningTagFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitConstructFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitDedicateAssertFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitDedicateAssertInternalTypeFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitExpectationFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitInternalClassFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitMethodCasingFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitMockFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitMockShortWillReturnFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitNamespacedFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitNoExpectationAnnotationFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitSetUpTearDownVisibilityFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitTestAnnotationFixer;
+use PhpCsFixer\Fixer\PhpUnit\PhpUnitTestCaseStaticMethodCallsFixer;
+use PhpCsFixer\Fixer\ReturnNotation\NoUselessReturnFixer;
+use PhpCsFixer\Fixer\ReturnNotation\ReturnAssignmentFixer;
+use PhpCsFixer\Fixer\ReturnNotation\SimplifiedNullReturnFixer;
+use PhpCsFixer\Fixer\Semicolon\MultilineWhitespaceBeforeSemicolonsFixer;
+use PhpCsFixer\Fixer\Semicolon\NoEmptyStatementFixer;
+use PhpCsFixer\Fixer\Semicolon\NoSinglelineWhitespaceBeforeSemicolonsFixer;
+use PhpCsFixer\Fixer\Semicolon\SemicolonAfterInstructionFixer;
+use PhpCsFixer\Fixer\Semicolon\SpaceAfterSemicolonFixer;
+use PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer;
+use PhpCsFixer\Fixer\Strict\StrictComparisonFixer;
+use PhpCsFixer\Fixer\Strict\StrictParamFixer;
+use PhpCsFixer\Fixer\StringNotation\EscapeImplicitBackslashesFixer;
+use PhpCsFixer\Fixer\StringNotation\ExplicitStringVariableFixer;
+use PhpCsFixer\Fixer\StringNotation\HeredocToNowdocFixer;
+use PhpCsFixer\Fixer\StringNotation\NoBinaryStringFixer;
+use PhpCsFixer\Fixer\StringNotation\NoTrailingWhitespaceInStringFixer;
+use PhpCsFixer\Fixer\StringNotation\SimpleToComplexStringVariableFixer;
+use PhpCsFixer\Fixer\StringNotation\SingleQuoteFixer;
 use PhpCsFixer\Fixer\StringNotation\StringLengthToEmptyFixer;
+use PhpCsFixer\Fixer\StringNotation\StringLineEndingFixer;
+use PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer;
+use PhpCsFixer\Fixer\Whitespace\BlankLineBeforeStatementFixer;
+use PhpCsFixer\Fixer\Whitespace\HeredocIndentationFixer;
+use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
+use PhpCsFixer\Fixer\Whitespace\NoSpacesAroundOffsetFixer;
 use PhpCsFixer\Fixer\Whitespace\TypesSpacesFixer;
+use PhpCsFixerCustomFixers\Fixer\CommentSurroundedBySpacesFixer;
+use PhpCsFixerCustomFixers\Fixer\DataProviderNameFixer;
 use PhpCsFixerCustomFixers\Fixer\IssetToArrayKeyExistsFixer;
+use PhpCsFixerCustomFixers\Fixer\NoCommentedOutCodeFixer;
 use PhpCsFixerCustomFixers\Fixer\NoDuplicatedArrayKeyFixer;
+use PhpCsFixerCustomFixers\Fixer\NoLeadingSlashInGlobalNamespaceFixer;
+use PhpCsFixerCustomFixers\Fixer\NoNullableBooleanTypeFixer;
+use PhpCsFixerCustomFixers\Fixer\NoPhpStormGeneratedCommentFixer;
+use PhpCsFixerCustomFixers\Fixer\NoSuperfluousConcatenationFixer;
 use PhpCsFixerCustomFixers\Fixer\NoTrailingCommaInSinglelineFixer;
+use PhpCsFixerCustomFixers\Fixer\NoUselessCommentFixer;
 use PhpCsFixerCustomFixers\Fixer\NoUselessDirnameCallFixer;
 use PhpCsFixerCustomFixers\Fixer\NoUselessParenthesisFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocArrayStyleFixer;
+use PhpCsFixerCustomFixers\Fixer\PhpdocNoSuperfluousParamFixer;
+use PhpCsFixerCustomFixers\Fixer\PhpdocParamOrderFixer;
+use PhpCsFixerCustomFixers\Fixer\PhpdocParamTypeFixer;
+use PhpCsFixerCustomFixers\Fixer\PhpdocSelfAccessorFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocTypesCommaSpacesFixer;
+use PhpCsFixerCustomFixers\Fixer\PhpdocTypesTrimFixer;
 use PhpCsFixerCustomFixers\Fixers as KubawerlosFixes;
+use ReflectionClass;
 use RuntimeException;
 
 /**
@@ -75,6 +260,8 @@ abstract class AbstractFixerConfig extends Config
         $this
             ->setUsingCache(true)
             ->setRiskyAllowed(true)
+            ->setIndent('    ')
+            ->setLineEnding("\n")
             ->registerCustomFixers(new KubawerlosFixes())
             ->registerCustomFixers(new PedroTrollerFixers());
     }
@@ -92,7 +279,7 @@ abstract class AbstractFixerConfig extends Config
 
         $header = $this->getHeader();
         if ($header !== null) {
-            $rules['header_comment'] = [
+            $rules[HeaderCommentFixer::class] = [
                 'header' => $header,
                 'comment_type' => 'comment',
                 'location' => 'after_open',
@@ -102,7 +289,21 @@ abstract class AbstractFixerConfig extends Config
 
         ksort($rules, \SORT_NATURAL);
 
-        return $rules;
+        $finalRules = [];
+        foreach ($rules as $rule => $value) {
+            if (!is_numeric($rule) && class_exists($rule)) {
+                $implements = class_implements($rule);
+                if (\is_array($implements) && \in_array(FixerInterface::class, $implements, true)) {
+                    /** @var FixerInterface $fixer */
+                    $fixer = (new ReflectionClass($rule))->newInstanceWithoutConstructor();
+                    $rule = $fixer->getName();
+                }
+            }
+
+            $finalRules[$rule] = $value;
+        }
+
+        return $finalRules;
     }
 
     /**
@@ -116,248 +317,274 @@ abstract class AbstractFixerConfig extends Config
     {
         $rules = [
             '@PSR12' => true,
-            'align_multiline_comment' => [
+            AlignMultilineCommentFixer::class => [
                 'comment_type' => 'phpdocs_like',
             ],
-            'array_indentation' => true,
-            'array_push' => true,
-            'backtick_to_shell_exec' => true,
-            'binary_operator_spaces' => [
+            ArrayIndentationFixer::class => true,
+            ArrayPushFixer::class => true,
+            BacktickToShellExecFixer::class => true,
+            BinaryOperatorSpacesFixer::class => [
                 'default' => 'single_space',
             ],
-            'blank_line_before_statement' => [
+            BlankLineBeforeStatementFixer::class => [
                 'statements' => ['case', 'continue', 'declare', 'default', 'return', 'throw', 'try'],
             ],
-            'cast_spaces' => [
+            BracesFixer::class => [
+                'allow_single_line_anonymous_class_with_empty_body' => true,
+                'allow_single_line_closure' => true,
+            ],
+            CastSpacesFixer::class => [
                 'space' => 'single',
             ],
-            'class_attributes_separation' => [
+            ClassAttributesSeparationFixer::class => [
                 'elements' => [
-                    'const' => 'one',
+                    'const' => 'only_if_meta',
                     'method' => 'one',
                     'property' => 'one',
                     'trait_import' => 'none',
                 ],
             ],
-            'clean_namespace' => true,
-            'combine_consecutive_issets' => true,
-            'combine_consecutive_unsets' => true,
-            'combine_nested_dirname' => true,
-            'concat_space' => [
+            ClassReferenceNameCasingFixer::class => true,
+            CleanNamespaceFixer::class => true,
+            CombineConsecutiveIssetsFixer::class => true,
+            CombineConsecutiveUnsetsFixer::class => true,
+            CombineNestedDirnameFixer::class => true,
+            CommentLineToPhpdocBlockFixer::class => true,
+            CommentSurroundedBySpacesFixer::class => true,
+            ConcatSpaceFixer::class => [
                 'spacing' => 'one',
             ],
-            'control_structure_continuation_position' => [
+            ControlStructureContinuationPositionFixer::class => [
                 'position' => 'same_line',
             ],
-            // 'date_time_immutable' => true,
-            'declare_strict_types' => true,
-            'dir_constant' => true,
-            'echo_tag_syntax' => [
+            DateTimeCreateFromFormatCallFixer::class => true,
+            DateTimeImmutableFixer::class => true,
+            DeclareParenthesesFixer::class => true,
+            DeclareStrictTypesFixer::class => true,
+            DirConstantFixer::class => true,
+            EchoTagSyntaxFixer::class => [
                 'format' => 'long',
                 'long_function' => 'echo',
                 'shorten_simple_statements_only' => true,
             ],
-            'ereg_to_preg' => true,
-            'error_suppression' => [
+            EmptyLoopBodyFixer::class => [
+                'style' => 'braces',
+            ],
+            EregToPregFixer::class => true,
+            ErrorSuppressionFixer::class => [
                 'mute_deprecation_error' => false,
                 'noise_remaining_usages' => false,
             ],
-            'escape_implicit_backslashes' => [
+            EscapeImplicitBackslashesFixer::class => [
                 'double_quoted' => true,
                 'heredoc_syntax' => true,
                 'single_quoted' => false,
             ],
-            'explicit_indirect_variable' => true,
-            'explicit_string_variable' => true,
-            // 'final_class' => true,
-            // 'final_public_method_for_abstract_class' => true,
-            'fopen_flag_order' => true,
-            'fopen_flags' => [
+            ExceptionsPunctuationFixer::class => true,
+            ExplicitIndirectVariableFixer::class => true,
+            ExplicitStringVariableFixer::class => true,
+            // FinalClassFixer::class => true,
+            // FinalPublicMethodForAbstractClassFixer::class => true,
+            FopenFlagOrderFixer::class => true,
+            FopenFlagsFixer::class => [
                 'b_mode' => true,
             ],
-            'fully_qualified_strict_types' => true,
-            'function_to_constant' => [
+            ForbiddenFunctionsFixer::class => [
+                'functions' => ['var_dump', 'die'],
+            ],
+            FullyQualifiedStrictTypesFixer::class => true,
+            FunctionToConstantFixer::class => [
                 'functions' => ['get_called_class', 'get_class', 'get_class_this', 'php_sapi_name', 'phpversion', 'pi'],
             ],
-            'function_typehint_space' => true,
-            'general_phpdoc_tag_rename' => [
-                'replacements' => [
-                    'inheritDocs' => 'inheritDoc',
-                ],
-                'fix_annotation' => true,
-                'fix_inline' => true,
-                'case_sensitive' => false,
+            FunctionTypehintSpaceFixer::class => true,
+            GeneralPhpdocAnnotationRemoveFixer::class => [
+                'annotations' => ['access', 'author', 'copyright', 'package', 'subpackage', 'tutorial'],
             ],
-            'global_namespace_import' => [
+            GeneralPhpdocTagRenameFixer::class => [
+                'replacements' => [
+                    'inheritdoc' => 'inheritDoc',
+                    'inheritdocs' => 'inheritDoc',
+                ],
+            ],
+            GlobalNamespaceImportFixer::class => [
                 'import_classes' => true,
                 'import_functions' => false,
                 'import_constants' => false,
             ],
-            'heredoc_indentation' => [
+            HeredocIndentationFixer::class => [
                 'indentation' => 'same_as_start',
             ],
-            'heredoc_to_nowdoc' => true,
-            'implode_call' => true,
-            'include' => true,
-            'increment_style' => [
+            HeredocToNowdocFixer::class => true,
+            ImplodeCallFixer::class => true,
+            IncludeFixer::class => true,
+            IncrementStyleFixer::class => [
                 'style' => 'pre',
             ],
-            'is_null' => true,
-            'lambda_not_used_import' => true,
-            'linebreak_after_opening_tag' => true,
-            'list_syntax' => [
+            IntegerLiteralCaseFixer::class => true,
+            IsNullFixer::class => true,
+            IssetToArrayKeyExistsFixer::class => true,
+            LambdaNotUsedImportFixer::class => true,
+            LinebreakAfterOpeningTagFixer::class => true,
+            LineBreakBetweenMethodArgumentsFixer::class => [
+                'max-args' => false,
+            ],
+            ListSyntaxFixer::class => [
                 'syntax' => 'short',
             ],
-            'logical_operators' => true,
-            'magic_constant_casing' => true,
-            'magic_method_casing' => true,
-            'mb_str_functions' => true,
-            'method_argument_space' => [
+            LogicalOperatorsFixer::class => true,
+            MagicConstantCasingFixer::class => true,
+            MagicMethodCasingFixer::class => true,
+            MbStrFunctionsFixer::class => true,
+            MethodArgumentSpaceFixer::class => [
                 'after_heredoc' => true,
                 'keep_multiple_spaces_after_comma' => false,
                 'on_multiline' => 'ensure_fully_multiline',
             ],
-            'method_chaining_indentation' => true,
-            'modernize_types_casting' => true,
-            'multiline_comment_opening_closing' => true,
-            'multiline_whitespace_before_semicolons' => [
+            MethodChainingIndentationFixer::class => true,
+            ModernizeTypesCastingFixer::class => true,
+            MultilineCommentOpeningClosingFixer::class => true,
+            MultilineWhitespaceBeforeSemicolonsFixer::class => [
                 'strategy' => 'no_multi_line',
             ],
-            'native_constant_invocation' => [
+            NativeConstantInvocationFixer::class => [
                 'exclude' => ['null', 'false', 'true'],
                 'fix_built_in' => true,
                 'scope' => 'all',
                 'strict' => true,
             ],
-            'native_function_casing' => true,
-            'native_function_invocation' => [
+            NativeFunctionCasingFixer::class => true,
+            NativeFunctionInvocationFixer::class => [
                 'include' => ['@compiler_optimized'],
                 'scope' => 'all',
                 'strict' => true,
             ],
-            'native_function_type_declaration_casing' => true,
-            'no_alias_functions' => [
+            NativeFunctionTypeDeclarationCasingFixer::class => true,
+            NoAliasFunctionsFixer::class => [
                 'sets' => ['@all'],
             ],
-            'no_alias_language_construct_call' => true,
-            'no_alternative_syntax' => true,
-            'no_binary_string' => true,
-            'no_blank_lines_after_phpdoc' => true,
-            'no_empty_comment' => true,
-            'no_empty_phpdoc' => true,
-            'no_empty_statement' => true,
-            'no_homoglyph_names' => true,
-            'no_leading_namespace_whitespace' => true,
-            'no_mixed_echo_print' => [
+            NoAliasLanguageConstructCallFixer::class => true,
+            NoAlternativeSyntaxFixer::class => true,
+            NoBinaryStringFixer::class => true,
+            NoBlankLinesAfterPhpdocFixer::class => true,
+            NoCommentedOutCodeFixer::class => true,
+            NoDuplicatedArrayKeyFixer::class => true,
+            NoEmptyCommentFixer::class => true,
+            NoEmptyPhpdocFixer::class => true,
+            NoEmptyStatementFixer::class => true,
+            NoHomoglyphNamesFixer::class => true,
+            NoLeadingNamespaceWhitespaceFixer::class => true,
+            NoLeadingSlashInGlobalNamespaceFixer::class => true,
+            NoMixedEchoPrintFixer::class => [
                 'use' => 'echo',
             ],
-            'no_multiline_whitespace_around_double_arrow' => true,
-            'no_null_property_initialization' => true,
-            'no_php4_constructor' => true,
-            'no_short_bool_cast' => true,
-            'no_singleline_whitespace_before_semicolons' => true,
-            'no_spaces_around_offset' => [
+            NoMultilineWhitespaceAroundDoubleArrowFixer::class => true,
+            NoNullPropertyInitializationFixer::class => true,
+            NoNullableBooleanTypeFixer::class => true,
+            NoPhp4ConstructorFixer::class => true,
+            NoPhpStormGeneratedCommentFixer::class => true,
+            NoShortBoolCastFixer::class => true,
+            NoSinglelineWhitespaceBeforeSemicolonsFixer::class => true,
+            NoSpacesAroundOffsetFixer::class => [
                 'positions' => ['inside', 'outside'],
             ],
-            'no_superfluous_elseif' => true,
-            'no_superfluous_phpdoc_tags' => [
+            NoSuperfluousConcatenationFixer::class => [
+                'allow_preventing_trailing_spaces' => true,
+            ],
+            NoSuperfluousElseifFixer::class => true,
+            NoSuperfluousPhpdocTagsFixer::class => [
                 'allow_mixed' => false,
                 'allow_unused_params' => false,
             ],
-            'no_trailing_comma_in_singleline_array' => true,
-            'no_trailing_whitespace_in_string' => true,
-            'no_unneeded_control_parentheses' => [
+            NoTrailingCommaInSinglelineArrayFixer::class => true,
+            NoTrailingCommaInSinglelineFixer::class => true,
+            NoTrailingCommaInSinglelineFunctionCallFixer::class => true,
+            NoTrailingWhitespaceInStringFixer::class => true,
+            NoUnneededControlParenthesesFixer::class => [
                 'statements' => ['break', 'clone', 'continue', 'echo_print', 'return', 'switch_case', 'yield'],
             ],
-            'no_unneeded_curly_braces' => [
+            NoUnneededCurlyBracesFixer::class => [
                 'namespaces' => true,
             ],
-            'no_unneeded_final_method' => [
+            NoUnneededFinalMethodFixer::class => [
                 'private_methods' => true,
             ],
-            'no_unreachable_default_argument_value' => true,
-            'no_unset_cast' => true,
-            'no_unset_on_property' => true,
-            'no_unused_imports' => true,
-            'no_useless_else' => true,
-            'no_useless_sprintf' => true,
-            'no_useless_return' => true,
-            'no_whitespace_before_comma_in_array' => [
+            NoUnneededImportAliasFixer::class => true,
+            NoUnreachableDefaultArgumentValueFixer::class => true,
+            NoUnsetCastFixer::class => true,
+            NoUnsetOnPropertyFixer::class => true,
+            NoUnusedImportsFixer::class => true,
+            NoUselessCommentFixer::class => true,
+            NoUselessDirnameCallFixer::class => true,
+            NoUselessElseFixer::class => true,
+            NoUselessParenthesisFixer::class => true,
+            NoUselessReturnFixer::class => true,
+            NoUselessSprintfFixer::class => true,
+            NoWhitespaceBeforeCommaInArrayFixer::class => [
                 'after_heredoc' => true,
             ],
-            'non_printable_character' => [
+            NonPrintableCharacterFixer::class => [
                 'use_escape_sequences_in_strings' => false,
             ],
-            'normalize_index_brace' => true,
-            'nullable_type_declaration_for_default_null_value' => [
+            NormalizeIndexBraceFixer::class => true,
+            NullableTypeDeclarationForDefaultNullValueFixer::class => [
                 'use_nullable_type_declaration' => true,
             ],
-            'object_operator_without_whitespace' => true,
-            'operator_linebreak' => [
+            ObjectOperatorWithoutWhitespaceFixer::class => true,
+            OperatorLinebreakFixer::class => [
                 'position' => 'beginning',
                 'only_booleans' => false,
             ],
-            'ordered_imports' => [
+            OrderedImportsFixer::class => [
                 'imports_order' => ['class', 'function', 'const'],
                 'sort_algorithm' => 'alpha',
             ],
-            'PedroTroller/comment_line_to_phpdoc_block' => true,
-            'PedroTroller/exceptions_punctuation' => true,
-            'PedroTroller/line_break_between_method_arguments' => [
-                'max-args' => false,
-            ],
-            'PhpCsFixerCustomFixers/comment_surrounded_by_spaces' => true,
-            'PhpCsFixerCustomFixers/no_commented_out_code' => true,
-            'PhpCsFixerCustomFixers/no_leading_slash_in_global_namespace' => true,
-            'PhpCsFixerCustomFixers/no_nullable_boolean_type' => true,
-            'PhpCsFixerCustomFixers/no_superfluous_concatenation' => [
-                'allow_preventing_trailing_spaces' => true,
-            ],
-            'PhpCsFixerCustomFixers/no_useless_comment' => true,
-            'PhpCsFixerCustomFixers/phpdoc_param_order' => true,
-            'PhpCsFixerCustomFixers/phpdoc_param_type' => true,
-            'PhpCsFixerCustomFixers/phpdoc_self_accessor' => true,
-            'PhpCsFixerCustomFixers/phpdoc_types_trim' => true,
-            'phpdoc_add_missing_param_annotation' => [
+            PhpdocAddMissingParamAnnotationFixer::class => [
                 'only_untyped' => true,
             ],
-            'phpdoc_align' => [
+            PhpdocAlignFixer::class => [
                 'align' => 'vertical',
                 'tags' => ['method', 'param', 'property', 'return', 'throws', 'type', 'var'],
             ],
-            'phpdoc_annotation_without_dot' => true,
-            'phpdoc_indent' => true,
-            'phpdoc_inline_tag_normalizer' => true,
-            'phpdoc_line_span' => [
+            PhpdocAnnotationWithoutDotFixer::class => true,
+            PhpdocArrayStyleFixer::class => true,
+            PhpdocIndentFixer::class => true,
+            PhpdocInlineTagNormalizerFixer::class => true,
+            PhpdocLineSpanFixer::class => [
                 'const' => 'single',
                 'property' => 'multi',
                 'method' => 'multi',
             ],
-            'phpdoc_no_access' => true,
-            'phpdoc_no_alias_tag' => true,
-            'phpdoc_no_empty_return' => true,
-            'phpdoc_no_package' => true,
-            'phpdoc_no_useless_inheritdoc' => true,
-            'phpdoc_order' => true,
-            'phpdoc_return_self_reference' => true,
-            'phpdoc_scalar' => true,
-            'phpdoc_separation' => true,
-            'phpdoc_single_line_var_spacing' => true,
-            'phpdoc_summary' => true,
-            'phpdoc_tag_casing' => true,
-            'phpdoc_tag_type' => [
+            PhpdocNoAccessFixer::class => true,
+            PhpdocNoAliasTagFixer::class => true,
+            PhpdocNoEmptyReturnFixer::class => true,
+            PhpdocNoPackageFixer::class => true,
+            PhpdocNoSuperfluousParamFixer::class => true,
+            PhpdocNoUselessInheritdocFixer::class => true,
+            PhpdocOrderFixer::class => true,
+            PhpdocParamOrderFixer::class => true,
+            PhpdocParamTypeFixer::class => true,
+            PhpdocReturnSelfReferenceFixer::class => true,
+            PhpdocScalarFixer::class => true,
+            PhpdocSelfAccessorFixer::class => true,
+            PhpdocSeparationFixer::class => true,
+            PhpdocSingleLineVarSpacingFixer::class => true,
+            PhpdocSummaryFixer::class => true,
+            PhpdocTagCasingFixer::class => true,
+            PhpdocTagTypeFixer::class => [
                 'tags' => [
                     'api' => 'annotation',
-                    'author' => 'annotation',
-                    'copyright' => 'annotation',
                     'deprecated' => 'annotation',
                     'example' => 'annotation',
                     'global' => 'annotation',
+                    'immutable' => 'annotation',
                     'internal' => 'annotation',
                     'license' => 'annotation',
+                    'link' => 'annotation',
                     'method' => 'annotation',
+                    'mixin' => 'annotation',
                     'param' => 'annotation',
                     'property' => 'annotation',
+                    'readonly' => 'annotation',
                     'return' => 'annotation',
                     'see' => 'annotation',
                     'since' => 'annotation',
@@ -368,143 +595,69 @@ abstract class AbstractFixerConfig extends Config
                     'version' => 'annotation',
                 ],
             ],
-            'phpdoc_trim' => true,
-            'phpdoc_trim_consecutive_blank_line_separation' => true,
-            'phpdoc_types' => true,
-            'phpdoc_types_order' => [
+            PhpdocTrimConsecutiveBlankLineSeparationFixer::class => true,
+            PhpdocTrimFixer::class => true,
+            PhpdocTypesCommaSpacesFixer::class => true,
+            PhpdocTypesFixer::class => true,
+            PhpdocTypesOrderFixer::class => [
                 'sort_algorithm' => 'none',
                 'null_adjustment' => 'always_last',
             ],
-            'phpdoc_var_without_name' => true,
-            'pow_to_exponentiation' => true,
-            'protected_to_private' => true,
-            'psr_autoloading' => true,
-            'random_api_migration' => true,
-            'regular_callable_call' => true,
-            'return_assignment' => true,
-            'self_accessor' => true,
-            'self_static_accessor' => true,
-            'semicolon_after_instruction' => true,
-            'set_type_to_cast' => true,
-            'simple_to_complex_string_variable' => true,
-            'simplified_if_return' => true,
-            'simplified_null_return' => true,
-            'single_line_comment_style' => [
+            PhpdocTypesTrimFixer::class => true,
+            PhpdocVarWithoutNameFixer::class => true,
+            PowToExponentiationFixer::class => true,
+            ProtectedToPrivateFixer::class => true,
+            PsrAutoloadingFixer::class => true,
+            RandomApiMigrationFixer::class => true,
+            RegularCallableCallFixer::class => true,
+            ReturnAssignmentFixer::class => true,
+            SelfAccessorFixer::class => true,
+            SelfStaticAccessorFixer::class => true,
+            SemicolonAfterInstructionFixer::class => true,
+            SetTypeToCastFixer::class => true,
+            SimpleToComplexStringVariableFixer::class => true,
+            SimplifiedIfReturnFixer::class => true,
+            SimplifiedNullReturnFixer::class => true,
+            SingleLineCommentSpacingFixer::class => true,
+            SingleLineCommentStyleFixer::class => [
                 'comment_types' => ['asterisk', 'hash'],
             ],
-            'single_quote' => [
+            SingleQuoteFixer::class => [
                 'strings_containing_single_quote_chars' => true,
             ],
-            'single_space_after_construct' => true,
-            'space_after_semicolon' => [
+            SingleSpaceAfterConstructFixer::class => true,
+            SpaceAfterSemicolonFixer::class => [
                 'remove_in_empty_for_expressions' => false,
             ],
-            'standardize_increment' => true,
-            'standardize_not_equals' => true,
-            'static_lambda' => true,
-            'strict_comparison' => true,
-            'strict_param' => true,
-            'string_line_ending' => true,
-            'switch_continue_to_break' => true,
-            'ternary_to_elvis_operator' => true,
-            'ternary_to_null_coalescing' => true,
-            'trailing_comma_in_multiline' => [
+            StandardizeIncrementFixer::class => true,
+            StandardizeNotEqualsFixer::class => true,
+            StaticLambdaFixer::class => true,
+            StrictComparisonFixer::class => true,
+            StrictParamFixer::class => true,
+            StringLineEndingFixer::class => true,
+            StringLengthToEmptyFixer::class => true,
+            SwitchContinueToBreakFixer::class => true,
+            TernaryToElvisOperatorFixer::class => true,
+            TernaryToNullCoalescingFixer::class => true,
+            TrailingCommaInMultilineFixer::class => [
                 'elements' => ['arrays', 'arguments', 'parameters'],
                 'after_heredoc' => true,
             ],
-            'trim_array_spaces' => true,
-            'unary_operator_spaces' => true,
-            'use_arrow_functions' => true,
-            'void_return' => true,
-            'whitespace_after_comma_in_array' => true,
-            'yoda_style' => [
+            TrimArraySpacesFixer::class => true,
+            TypesSpacesFixer::class => [
+                'space' => 'none',
+            ],
+            UnaryOperatorSpacesFixer::class => true,
+            UseArrowFunctionsFixer::class => true,
+            VoidReturnFixer::class => true,
+            WhitespaceAfterCommaInArrayFixer::class => true,
+            YodaStyleFixer::class => [
                 'equal' => false,
                 'identical' => false,
                 'less_and_greater' => false,
                 'always_move_variable' => false,
             ],
         ];
-
-        // PHP-CS-Fixer 3.8
-        if (class_exists(DateTimeCreateFromFormatCallFixer::class)) {
-            $rules['date_time_create_from_format_call'] = true;
-        }
-
-        // PHP-CS-Fixer 3.7
-        if (class_exists(NoTrailingCommaInSinglelineFunctionCallFixer::class)) {
-            $rules['no_trailing_comma_in_singleline_function_call'] = true;
-        }
-        if (class_exists(SingleLineCommentSpacingFixer::class)) {
-            $rules['single_line_comment_spacing'] = true;
-        }
-
-        // PHP-CS-Fixer 3.6
-        if (class_exists(ClassReferenceNameCasingFixer::class)) {
-            $rules['class_reference_name_casing'] = true;
-        }
-        if (class_exists(NoUnneededImportAliasFixer::class)) {
-            $rules['no_unneeded_import_alias'] = true;
-        }
-
-        // PHP-CS-Fixer 3.4
-        if (class_exists(DeclareParenthesesFixer::class)) {
-            $rules['declare_parentheses'] = true;
-        }
-
-        // PHP-CS-Fixer 3.2
-        if (class_exists(IntegerLiteralCaseFixer::class)) {
-            $rules['integer_literal_case'] = true;
-        }
-        if (class_exists(StringLengthToEmptyFixer::class)) {
-            $rules['string_length_to_empty'] = true;
-        }
-
-        // PHP-CS-Fixer 3.1
-        if (class_exists(EmptyLoopBodyFixer::class)) {
-            $rules['empty_loop_body'] = [
-                'style' => 'braces',
-            ];
-        }
-        if (class_exists(TypesSpacesFixer::class)) {
-            $rules['types_spaces'] = [
-                'space' => 'none',
-            ];
-        }
-
-        // kubawerlos/php-cs-fixer-custom-fixers 3.9
-        if (class_exists(PhpdocTypesCommaSpacesFixer::class)) {
-            $rules['PhpCsFixerCustomFixers/phpdoc_types_comma_spaces'] = true;
-        }
-
-        // kubawerlos/php-cs-fixer-custom-fixers 3.7
-        if (class_exists(NoTrailingCommaInSinglelineFixer::class)) {
-            $rules['PhpCsFixerCustomFixers/no_trailing_comma_in_singleline'] = true;
-        }
-
-        // kubawerlos/php-cs-fixer-custom-fixers 3.6
-        if (class_exists(IssetToArrayKeyExistsFixer::class)) {
-            $rules['PhpCsFixerCustomFixers/isset_to_array_key_exists'] = true;
-        }
-
-        // kubawerlos/php-cs-fixer-custom-fixers 3.5
-        if (class_exists(NoUselessDirnameCallFixer::class)) {
-            $rules['PhpCsFixerCustomFixers/no_useless_dirname_call'] = true;
-        }
-
-        // kubawerlos/php-cs-fixer-custom-fixers 3.1
-        if (class_exists(PhpdocArrayStyleFixer::class)) {
-            $rules['PhpCsFixerCustomFixers/phpdoc_array_style'] = true;
-        }
-
-        // kubawerlos/php-cs-fixer-custom-fixers 3.0
-        if (class_exists(NoDuplicatedArrayKeyFixer::class)) {
-            $rules['PhpCsFixerCustomFixers/no_duplicated_array_key'] = [
-                'ignore_expressions' => true,
-            ];
-        }
-        if (class_exists(NoUselessParenthesisFixer::class)) {
-            $rules['PhpCsFixerCustomFixers/no_useless_parenthesis'] = true;
-        }
 
         return array_merge(
             $rules,
@@ -524,58 +677,58 @@ abstract class AbstractFixerConfig extends Config
         }
 
         return [
-            'PhpCsFixerCustomFixers/data_provider_name' => [
+            DataProviderNameFixer::class => [
                 'prefix' => '',
                 'suffix' => 'Provider',
             ],
-            'php_unit_construct' => [
+            PhpUnitConstructFixer::class => [
                 'assertions' => ['assertEquals', 'assertSame', 'assertNotEquals', 'assertNotSame'],
             ],
-            'php_unit_dedicate_assert' => [
+            PhpUnitDedicateAssertFixer::class => [
                 'target' => '5.6',
             ],
-            'php_unit_dedicate_assert_internal_type' => [
+            PhpUnitDedicateAssertInternalTypeFixer::class => [
                 'target' => '7.5',
             ],
-            'php_unit_expectation' => [
+            PhpUnitExpectationFixer::class => [
                 'target' => '8.4',
             ],
-            'php_unit_internal_class' => [
+            PhpUnitInternalClassFixer::class => [
                 'types' => ['normal', 'final', 'abstract'],
             ],
-            'php_unit_method_casing' => [
+            PhpUnitMethodCasingFixer::class => [
                 'case' => 'camel_case',
             ],
-            'php_unit_mock' => [
+            PhpUnitMockFixer::class => [
                 'target' => '5.5',
             ],
-            'php_unit_mock_short_will_return' => true,
-            'php_unit_namespaced' => [
+            PhpUnitMockShortWillReturnFixer::class => true,
+            PhpUnitNamespacedFixer::class => [
                 'target' => '6.0',
             ],
-            'php_unit_no_expectation_annotation' => [
+            PhpUnitNoExpectationAnnotationFixer::class => [
                 'target' => '4.3',
                 'use_class_const' => true,
             ],
-            'php_unit_set_up_tear_down_visibility' => true,
-            // 'php_unit_size_class' => [
+            PhpUnitSetUpTearDownVisibilityFixer::class => true,
+            // PhpUnitSizeClassFixer::class => [
             //     'small',
             //     'medium',
             //     'large',
             // ],
-            // 'php_unit_strict' => [
+            // PhpUnitStrictFixer::class => [
             //     'assertAttributeEquals',
             //     'assertAttributeNotEquals',
             //     'assertEquals',
             //     'assertNotEquals',
             // ],
-            'php_unit_test_annotation' => [
+            PhpUnitTestAnnotationFixer::class => [
                 'style' => 'prefix',
             ],
-            'php_unit_test_case_static_method_calls' => [
+            PhpUnitTestCaseStaticMethodCallsFixer::class => [
                 'call_type' => 'static',
             ],
-            // 'php_unit_test_class_requires_covers' => true,
+            // PhpUnitTestClassRequiresCoversFixer::class => true,
         ];
     }
 
@@ -591,9 +744,9 @@ abstract class AbstractFixerConfig extends Config
         }
 
         return [
-            'phpdoc_to_param_type' => true,
-            'phpdoc_to_property_type' => true,
-            'phpdoc_to_return_type' => true,
+            PhpdocToParamTypeFixer::class => true,
+            PhpdocToPropertyTypeFixer::class => true,
+            PhpdocToReturnTypeFixer::class => true,
         ];
     }
 
@@ -622,7 +775,7 @@ abstract class AbstractFixerConfig extends Config
 
         $header = str_replace(
             ['/**', ' */', ' * ', ' *', '{{year}}', '{{package}}'],
-            ['', '', '', '', (new DateTime('now'))->format('Y'), InstalledVersions::getRootPackage()['name']],
+            ['', '', '', '', (new DateTimeImmutable('now'))->format('Y'), InstalledVersions::getRootPackage()['name']],
             $this->header,
         );
 
