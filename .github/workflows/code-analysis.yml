@@ -46,7 +46,7 @@ jobs:
           - lowest
           - highest
 
-    name: Analyse on PHP ${{ matrix.php }}
+    name: Analyse on PHP ${{ matrix.php }} ${{ matrix.dependency }}
 
     runs-on: ubuntu-latest
 
