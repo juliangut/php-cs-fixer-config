@@ -339,10 +339,10 @@ abstract class AbstractFixerConfig extends Config
             ],
             ClassAttributesSeparationFixer::class => [
                 'elements' => [
-                    'const' => 'only_if_meta',
-                    'method' => 'one',
-                    'property' => 'one',
                     'trait_import' => 'none',
+                    'const' => 'none',
+                    'property' => 'one',
+                    'method' => 'one',
                 ],
             ],
             CleanNamespaceFixer::class => true,
@@ -607,7 +607,7 @@ abstract class AbstractFixerConfig extends Config
                 'comment_types' => ['asterisk', 'hash'],
             ],
             SingleQuoteFixer::class => [
-                'strings_containing_single_quote_chars' => true,
+                'strings_containing_single_quote_chars' => false,
             ],
             SingleSpaceAfterConstructFixer::class => true,
             SpaceAfterSemicolonFixer::class => [
@@ -682,6 +682,7 @@ abstract class AbstractFixerConfig extends Config
         if (class_exists(TypesSpacesFixer::class)) {
             $rules[TypesSpacesFixer::class] = [
                 'space' => 'none',
+                'space_multiple_catch' => 'single',
             ];
         }
 

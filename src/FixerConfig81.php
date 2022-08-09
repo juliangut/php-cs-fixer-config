@@ -13,6 +13,7 @@ namespace Jgut\CS\Fixer;
 
 use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\Basic\OctalNotationFixer;
+use PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer;
 use PhpCsFixer\Fixer\LanguageConstruct\GetClassToClassKeywordFixer;
 use PhpCsFixer\Fixer\Operator\AssignNullCoalescingToCoalesceEqualFixer;
 use PhpCsFixerCustomFixers\Fixer\MultilinePromotedPropertiesFixer;
@@ -35,12 +36,24 @@ class FixerConfig81 extends AbstractFixerConfig
      */
     protected function getFixerRules(): array
     {
-        $rules = parent::getFixerRules();
-
-        $rules[NumericLiteralSeparatorFixer::class] = [
-            'decimal' => true,
-            'float' => true,
-        ];
+        $rules = array_merge(
+            parent::getFixerRules(),
+            [
+                ClassAttributesSeparationFixer::class => [
+                    'elements' => [
+                        'trait_import' => 'one',
+                        'const' => 'none',
+                        'property' => 'one',
+                        'method' => 'one',
+                        'case' => 'one',
+                    ],
+                ],
+                NumericLiteralSeparatorFixer::class => [
+                    'decimal' => true,
+                    'float' => true,
+                ],
+            ],
+        );
 
         // PHP-CS-Fixer 3.5
         if (class_exists(GetClassToClassKeywordFixer::class)) {

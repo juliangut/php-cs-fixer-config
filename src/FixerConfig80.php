@@ -32,12 +32,15 @@ class FixerConfig80 extends AbstractFixerConfig
      */
     protected function getFixerRules(): array
     {
-        $rules = parent::getFixerRules();
-
-        $rules[NumericLiteralSeparatorFixer::class] = [
-            'decimal' => true,
-            'float' => true,
-        ];
+        $rules = array_merge(
+            parent::getFixerRules(),
+            [
+                NumericLiteralSeparatorFixer::class => [
+                    'decimal' => true,
+                    'float' => true,
+                ],
+            ],
+        );
 
         // PHP-CS-Fixer 3.5
         if (class_exists(GetClassToClassKeywordFixer::class)) {

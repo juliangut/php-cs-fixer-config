@@ -44,7 +44,7 @@ jobs:
         php: ${{ fromJson(needs.prepare_env.outputs.php) }}
         dependency:
           - lowest
-          - highest
+          - stable
 
     name: Analyse on PHP ${{ matrix.php }} ${{ matrix.dependency }}
 
