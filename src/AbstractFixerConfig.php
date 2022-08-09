@@ -737,7 +737,7 @@ abstract class AbstractFixerConfig extends Config
             return [];
         }
 
-        if (!class_exists(Exception::class)) {
+        if (!interface_exists(Exception::class)) {
             throw new RuntimeException('PHPUnit rules cannot be used as PHPUnit is not installed.');
         }
 
