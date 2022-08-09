@@ -217,7 +217,7 @@ use PhpCsFixerCustomFixers\Fixer\PhpdocSelfAccessorFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocTypesCommaSpacesFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocTypesTrimFixer;
 use PhpCsFixerCustomFixers\Fixers as KubawerlosFixes;
-use PHPUnit\Framework\Test;
+use PHPUnit\Exception;
 use ReflectionClass;
 use RuntimeException;
 
@@ -737,7 +737,7 @@ abstract class AbstractFixerConfig extends Config
             return [];
         }
 
-        if (!class_exists(Test::class)) {
+        if (!class_exists(Exception::class)) {
             throw new RuntimeException('PHPUnit rules cannot be used as PHPUnit is not installed.');
         }
 

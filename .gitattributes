@@ -6,6 +6,6 @@
 .editorconfig       export-ignore
 .php-cs-fixer.php   export-ignore
 .phplint.yml        export-ignore
-phpstan.neon        export-ignore
+phpstan.neon.dist   export-ignore
 Makefile            export-ignore
 CONTRIBUTING.md     export-ignore
