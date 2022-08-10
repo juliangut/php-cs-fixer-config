@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Jgut\CS\Fixer;
 
-use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
-
 class FixerConfig73 extends AbstractFixerConfig
 {
     /**
@@ -28,14 +26,6 @@ class FixerConfig73 extends AbstractFixerConfig
      */
     protected function getFixerRules(): array
     {
-        return array_merge(
-            parent::getFixerRules(),
-            [
-                TrailingCommaInMultilineFixer::class => [
-                    'elements' => ['arrays', 'arguments'],
-                    'after_heredoc' => true,
-                ],
-            ],
-        );
+        return parent::getFixerRules();
     }
 }

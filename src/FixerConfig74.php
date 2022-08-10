@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Jgut\CS\Fixer;
 
-use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
+use Composer\InstalledVersions;
 use PhpCsFixer\Fixer\Operator\AssignNullCoalescingToCoalesceEqualFixer;
 use PhpCsFixerCustomFixers\Fixer\NumericLiteralSeparatorFixer;
 
@@ -33,20 +33,21 @@ class FixerConfig74 extends AbstractFixerConfig
         $rules = array_merge(
             parent::getFixerRules(),
             [
-                AssignNullCoalescingToCoalesceEqualFixer::class => true,
                 NumericLiteralSeparatorFixer::class => [
                     'decimal' => true,
                     'float' => true,
                 ],
-                TrailingCommaInMultilineFixer::class => [
-                    'elements' => ['arrays', 'arguments'],
-                    'after_heredoc' => true,
-                ],
             ],
         );
 
-        // PHP-CS-Fixer 3.2
-        if (class_exists(AssignNullCoalescingToCoalesceEqualFixer::class)) {
+        /** @var string $phpCsFixerVersion */
+        $phpCsFixerVersion = preg_replace(
+            '/^v/',
+            '',
+            InstalledVersions::getPrettyVersion('friendsofphp/php-cs-fixer') ?? '',
+        );
+
+        if (version_compare($phpCsFixerVersion, '3.2', '>=')) {
             $rules[AssignNullCoalescingToCoalesceEqualFixer::class] = true;
         }
 

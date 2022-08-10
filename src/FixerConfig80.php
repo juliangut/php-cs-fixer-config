@@ -11,9 +11,12 @@ declare(strict_types=1);
 
 namespace Jgut\CS\Fixer;
 
+use Composer\InstalledVersions;
 use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
+use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
 use PhpCsFixer\Fixer\LanguageConstruct\GetClassToClassKeywordFixer;
 use PhpCsFixer\Fixer\Operator\AssignNullCoalescingToCoalesceEqualFixer;
+use PhpCsFixer\Fixer\Operator\NoUselessNullsafeOperatorFixer;
 use PhpCsFixerCustomFixers\Fixer\NumericLiteralSeparatorFixer;
 use PhpCsFixerCustomFixers\Fixer\StringableInterfaceFixer;
 
@@ -39,24 +42,41 @@ class FixerConfig80 extends AbstractFixerConfig
                     'decimal' => true,
                     'float' => true,
                 ],
+                TrailingCommaInMultilineFixer::class => [
+                    'elements' => ['arrays', 'arguments', 'parameters'],
+                    'after_heredoc' => true,
+                ],
             ],
         );
 
-        // PHP-CS-Fixer 3.5
-        if (class_exists(GetClassToClassKeywordFixer::class)) {
-            $rules[GetClassToClassKeywordFixer::class] = true;
-        }
+        /** @var string $phpCsFixerVersion */
+        $phpCsFixerVersion = preg_replace(
+            '/^v/',
+            '',
+            InstalledVersions::getPrettyVersion('friendsofphp/php-cs-fixer') ?? '',
+        );
 
-        // PHP-CS-Fixer 3.2
-        if (class_exists(AssignNullCoalescingToCoalesceEqualFixer::class)) {
+        if (version_compare($phpCsFixerVersion, '3.2', '>=')) {
             $rules[AssignNullCoalescingToCoalesceEqualFixer::class] = true;
-        }
-        if (class_exists(ModernizeStrposFixer::class)) {
             $rules[ModernizeStrposFixer::class] = true;
         }
 
-        // kubawerlos/php-cs-fixer-custom-fixers 3.0
-        if (class_exists(StringableInterfaceFixer::class)) {
+        if (version_compare($phpCsFixerVersion, '3.5', '>=')) {
+            $rules[GetClassToClassKeywordFixer::class] = true;
+        }
+
+        if (version_compare($phpCsFixerVersion, '3.9.1', '>=')) {
+            $rules[NoUselessNullsafeOperatorFixer::class] = true;
+        }
+
+        /** @var string $kubawerlosVersion */
+        $kubawerlosVersion = preg_replace(
+            '/^v/',
+            '',
+            InstalledVersions::getPrettyVersion('kubawerlos/php-cs-fixer-custom-fixers') ?? '',
+        );
+
+        if (version_compare($kubawerlosVersion, '3.0', '>=')) {
             $rules[StringableInterfaceFixer::class] = true;
         }
 

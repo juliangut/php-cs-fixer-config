@@ -36,6 +36,8 @@ use PhpCsFixer\Fixer\ArrayNotation\NoWhitespaceBeforeCommaInArrayFixer;
 use PhpCsFixer\Fixer\ArrayNotation\TrimArraySpacesFixer;
 use PhpCsFixer\Fixer\ArrayNotation\WhitespaceAfterCommaInArrayFixer;
 use PhpCsFixer\Fixer\Basic\BracesFixer;
+use PhpCsFixer\Fixer\Basic\CurlyBracesPositionFixer;
+use PhpCsFixer\Fixer\Basic\NoMultipleStatementsPerLineFixer;
 use PhpCsFixer\Fixer\Basic\NonPrintableCharacterFixer;
 use PhpCsFixer\Fixer\Basic\PsrAutoloadingFixer;
 use PhpCsFixer\Fixer\Casing\ClassReferenceNameCasingFixer;
@@ -62,6 +64,7 @@ use PhpCsFixer\Fixer\Comment\NoEmptyCommentFixer;
 use PhpCsFixer\Fixer\Comment\SingleLineCommentSpacingFixer;
 use PhpCsFixer\Fixer\Comment\SingleLineCommentStyleFixer;
 use PhpCsFixer\Fixer\ConstantNotation\NativeConstantInvocationFixer;
+use PhpCsFixer\Fixer\ControlStructure\ControlStructureBracesFixer;
 use PhpCsFixer\Fixer\ControlStructure\ControlStructureContinuationPositionFixer;
 use PhpCsFixer\Fixer\ControlStructure\EmptyLoopBodyFixer;
 use PhpCsFixer\Fixer\ControlStructure\IncludeFixer;
@@ -118,6 +121,7 @@ use PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Operator\ConcatSpaceFixer;
 use PhpCsFixer\Fixer\Operator\IncrementStyleFixer;
 use PhpCsFixer\Fixer\Operator\LogicalOperatorsFixer;
+use PhpCsFixer\Fixer\Operator\NoSpaceAroundDoubleColonFixer;
 use PhpCsFixer\Fixer\Operator\ObjectOperatorWithoutWhitespaceFixer;
 use PhpCsFixer\Fixer\Operator\OperatorLinebreakFixer;
 use PhpCsFixer\Fixer\Operator\StandardizeIncrementFixer;
@@ -194,7 +198,9 @@ use PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer;
 use PhpCsFixer\Fixer\Whitespace\BlankLineBeforeStatementFixer;
 use PhpCsFixer\Fixer\Whitespace\HeredocIndentationFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
+use PhpCsFixer\Fixer\Whitespace\NoExtraBlankLinesFixer;
 use PhpCsFixer\Fixer\Whitespace\NoSpacesAroundOffsetFixer;
+use PhpCsFixer\Fixer\Whitespace\StatementIndentationFixer;
 use PhpCsFixer\Fixer\Whitespace\TypesSpacesFixer;
 use PhpCsFixerCustomFixers\Fixer\CommentSurroundedBySpacesFixer;
 use PhpCsFixerCustomFixers\Fixer\DataProviderNameFixer;
@@ -354,9 +360,6 @@ abstract class AbstractFixerConfig extends Config
             ConcatSpaceFixer::class => [
                 'spacing' => 'one',
             ],
-            ControlStructureContinuationPositionFixer::class => [
-                'position' => 'same_line',
-            ],
             DateTimeImmutableFixer::class => true,
             DeclareStrictTypesFixer::class => true,
             DirConstantFixer::class => true,
@@ -463,6 +466,21 @@ abstract class AbstractFixerConfig extends Config
             NoEmptyCommentFixer::class => true,
             NoEmptyPhpdocFixer::class => true,
             NoEmptyStatementFixer::class => true,
+            NoExtraBlankLinesFixer::class => [
+                'tokens' => [
+                    'break',
+                    'case',
+                    'continue',
+                    'curly_brace_block',
+                    'default',
+                    'extra',
+                    'parenthesis_brace_block',
+                    'return',
+                    'square_brace_block',
+                    'switch',
+                    'throw',
+                ],
+            ],
             NoHomoglyphNamesFixer::class => true,
             NoLeadingNamespaceWhitespaceFixer::class => true,
             NoLeadingSlashInGlobalNamespaceFixer::class => true,
@@ -623,7 +641,7 @@ abstract class AbstractFixerConfig extends Config
             TernaryToElvisOperatorFixer::class => true,
             TernaryToNullCoalescingFixer::class => true,
             TrailingCommaInMultilineFixer::class => [
-                'elements' => ['arrays', 'arguments', 'parameters'],
+                'elements' => ['arrays', 'arguments'],
                 'after_heredoc' => true,
             ],
             TrimArraySpacesFixer::class => true,
@@ -639,86 +657,106 @@ abstract class AbstractFixerConfig extends Config
             ],
         ];
 
-        // PHP-CS-Fixer 3.8
-        if (class_exists(DateTimeCreateFromFormatCallFixer::class)) {
-            $rules[DateTimeCreateFromFormatCallFixer::class] = true;
-        }
+        /** @var string $phpCsFixerVersion */
+        $phpCsFixerVersion = preg_replace(
+            '/^v/',
+            '',
+            InstalledVersions::getPrettyVersion('friendsofphp/php-cs-fixer') ?? '',
+        );
 
-        // PHP-CS-Fixer 3.7
-        if (class_exists(NoTrailingCommaInSinglelineFunctionCallFixer::class)) {
-            $rules[NoTrailingCommaInSinglelineFunctionCallFixer::class] = true;
-        }
-        if (class_exists(SingleLineCommentSpacingFixer::class)) {
-            $rules[SingleLineCommentSpacingFixer::class] = true;
-        }
-
-        // PHP-CS-Fixer 3.6
-        if (class_exists(ClassReferenceNameCasingFixer::class)) {
-            $rules[ClassReferenceNameCasingFixer::class] = true;
-        }
-        if (class_exists(NoUnneededImportAliasFixer::class)) {
-            $rules[NoUnneededImportAliasFixer::class] = true;
-        }
-
-        // PHP-CS-Fixer 3.4
-        if (class_exists(DeclareParenthesesFixer::class)) {
+        if (version_compare($phpCsFixerVersion, '3.1', '>=')) {
             $rules[DeclareParenthesesFixer::class] = true;
-        }
-
-        // PHP-CS-Fixer 3.2
-        if (class_exists(IntegerLiteralCaseFixer::class)) {
-            $rules[IntegerLiteralCaseFixer::class] = true;
-        }
-        if (class_exists(StringLengthToEmptyFixer::class)) {
-            $rules[StringLengthToEmptyFixer::class] = true;
-        }
-
-        // PHP-CS-Fixer 3.1
-        if (class_exists(EmptyLoopBodyFixer::class)) {
             $rules[EmptyLoopBodyFixer::class] = [
                 'style' => 'braces',
             ];
+            $rules[TypesSpacesFixer::class] = [
+                'space' => 'none',
+            ];
         }
-        if (class_exists(TypesSpacesFixer::class)) {
+
+        if (version_compare($phpCsFixerVersion, '3.2', '>=')) {
+            $rules[ControlStructureContinuationPositionFixer::class] = [];
+            $rules[IntegerLiteralCaseFixer::class] = true;
+            $rules[NoSpaceAroundDoubleColonFixer::class] = true;
+            $rules[StringLengthToEmptyFixer::class] = true;
+        }
+
+        if (version_compare($phpCsFixerVersion, '3.6', '>=')) {
+            $rules[ClassReferenceNameCasingFixer::class] = true;
+            $rules[NoUnneededImportAliasFixer::class] = true;
+        }
+
+        if (version_compare($phpCsFixerVersion, '3.7', '>=')) {
+            $rules[NoTrailingCommaInSinglelineFunctionCallFixer::class] = true;
+            $rules[SingleLineCommentSpacingFixer::class] = true;
+        }
+
+        if (version_compare($phpCsFixerVersion, '3.8', '>=')) {
+            $rules[DateTimeCreateFromFormatCallFixer::class] = true;
             $rules[TypesSpacesFixer::class] = [
                 'space' => 'none',
                 'space_multiple_catch' => 'single',
             ];
         }
 
-        // kubawerlos/php-cs-fixer-custom-fixers 3.9
-        if (class_exists(PhpdocTypesCommaSpacesFixer::class)) {
-            $rules[PhpdocTypesCommaSpacesFixer::class] = true;
+        if (version_compare($phpCsFixerVersion, '3.9.1', '>=')) {
+            $rules[ControlStructureBracesFixer::class] = true;
+            $rules[CurlyBracesPositionFixer::class] = true;
+            $rules[NoExtraBlankLinesFixer::class] = [
+                'tokens' => [
+                    'attribute',
+                    'break',
+                    'case',
+                    'continue',
+                    'curly_brace_block',
+                    'default',
+                    'extra',
+                    'parenthesis_brace_block',
+                    'return',
+                    'square_brace_block',
+                    'switch',
+                    'throw',
+                ],
+            ];
+            $rules[StatementIndentationFixer::class] = true;
         }
 
-        // kubawerlos/php-cs-fixer-custom-fixers 3.7
-        if (class_exists(NoTrailingCommaInSinglelineFixer::class)) {
-            $rules[NoTrailingCommaInSinglelineFixer::class] = true;
+        if (version_compare($phpCsFixerVersion, '3.9.5', '>=')) {
+            $rules[NoMultipleStatementsPerLineFixer::class] = true;
         }
 
-        // kubawerlos/php-cs-fixer-custom-fixers 3.6
-        if (class_exists(IssetToArrayKeyExistsFixer::class)) {
-            $rules[IssetToArrayKeyExistsFixer::class] = true;
-        }
+        /** @var string $kubawerlosVersion */
+        $kubawerlosVersion = preg_replace(
+            '/^v/',
+            '',
+            InstalledVersions::getPrettyVersion('kubawerlos/php-cs-fixer-custom-fixers') ?? '',
+        );
 
-        // kubawerlos/php-cs-fixer-custom-fixers 3.5
-        if (class_exists(NoUselessDirnameCallFixer::class)) {
-            $rules[NoUselessDirnameCallFixer::class] = true;
-        }
-
-        // kubawerlos/php-cs-fixer-custom-fixers 3.1
-        if (class_exists(PhpdocArrayStyleFixer::class)) {
-            $rules[PhpdocArrayStyleFixer::class] = true;
-        }
-
-        // kubawerlos/php-cs-fixer-custom-fixers 3.0
-        if (class_exists(NoDuplicatedArrayKeyFixer::class)) {
+        if (version_compare($kubawerlosVersion, '3.0', '>=')) {
             $rules[NoDuplicatedArrayKeyFixer::class] = [
                 'ignore_expressions' => true,
             ];
-        }
-        if (class_exists(NoUselessParenthesisFixer::class)) {
             $rules[NoUselessParenthesisFixer::class] = true;
+        }
+
+        if (version_compare($kubawerlosVersion, '3.1', '>=')) {
+            $rules[PhpdocArrayStyleFixer::class] = true;
+        }
+
+        if (version_compare($kubawerlosVersion, '3.5', '>=')) {
+            $rules[NoUselessDirnameCallFixer::class] = true;
+        }
+
+        if (version_compare($kubawerlosVersion, '3.6', '>=')) {
+            $rules[IssetToArrayKeyExistsFixer::class] = true;
+        }
+
+        if (version_compare($kubawerlosVersion, '3.7', '>=')) {
+            $rules[NoTrailingCommaInSinglelineFixer::class] = true;
+        }
+
+        if (version_compare($kubawerlosVersion, '3.9', '>=')) {
+            $rules[PhpdocTypesCommaSpacesFixer::class] = true;
         }
 
         return array_merge(
