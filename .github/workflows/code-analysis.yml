@@ -61,7 +61,7 @@ jobs:
       - name: Composer install
         uses: ramsey/composer-install@v2
         with:
-          dependency-version: ${{ matrix.dependency }}
+          dependency-versions: ${{ matrix.dependency }}
           composer-options: "--prefer-dist"
 
       - name: Run PHP linting
