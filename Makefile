@@ -11,7 +11,7 @@ lint-phpcs:
 
 .PHONY: lint-phpcs-fixer
 lint-phpcs-fixer:
-	vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose --ansi
+	PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose --ansi
 
 .PHONY: lint
 lint:
@@ -26,7 +26,7 @@ fix-phpcbf:
 
 .PHONY: fix-phpcs-fixer
 fix-phpcs-fixer:
-	vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --verbose --ansi
+	PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --verbose --ansi
 
 .PHONY: fix
 fix:
