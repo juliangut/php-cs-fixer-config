@@ -38,15 +38,18 @@ class FixerConfig80 extends FixerConfig74
         $rules = array_merge(
             parent::getFixerRules(),
             [
+                // friendsofphp/php-cs-fixer
+                TrailingCommaInMultilineFixer::class => [
+                    'elements' => ['arrays', 'arguments', 'parameters'],
+                    'after_heredoc' => true,
+                ],
+
+                // kubawerlos/php-cs-fixer-custom-fixers
                 MultilinePromotedPropertiesFixer::class => true,
                 PromotedConstructorPropertyFixer::class => [
                     'promote_only_existing_properties' => false,
                 ],
                 StringableInterfaceFixer::class => true,
-                TrailingCommaInMultilineFixer::class => [
-                    'elements' => ['arrays', 'arguments', 'parameters'],
-                    'after_heredoc' => true,
-                ],
             ],
         );
 

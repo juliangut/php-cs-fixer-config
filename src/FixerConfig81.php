@@ -33,6 +33,7 @@ class FixerConfig81 extends FixerConfig80
         $rules = array_merge(
             parent::getFixerRules(),
             [
+                // friendsofphp/php-cs-fixer
                 ClassAttributesSeparationFixer::class => [
                     'elements' => [
                         'trait_import' => 'one',

@@ -33,6 +33,7 @@ class FixerConfig74 extends AbstractFixerConfig
         $rules = array_merge(
             parent::getFixerRules(),
             [
+                // kubawerlos/php-cs-fixer-custom-fixers
                 NumericLiteralSeparatorFixer::class => [
                     'decimal' => true,
                     'float' => true,
