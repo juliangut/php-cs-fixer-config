@@ -17,17 +17,11 @@ use PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer;
 
 class FixerConfig81 extends FixerConfig80
 {
-    /**
-     * @inheritDoc
-     */
     protected function getRequiredPhpVersion(): string
     {
         return '8.1.0';
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getFixerRules(): array
     {
         $rules = array_merge(

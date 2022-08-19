@@ -248,7 +248,7 @@ abstract class AbstractFixerConfig extends Config
     private $phpUnit = false;
 
     /**
-     * @var array<string, bool|array<string, mixed>>
+     * @var array<string|class-string<FixerInterface>, bool|array<string, mixed>>
      */
     private $additionalRules = [];
 
@@ -317,7 +317,7 @@ abstract class AbstractFixerConfig extends Config
     }
 
     /**
-     * @return array<string, bool|array<string, mixed>>
+     * @return array<string|class-string<FixerInterface>, bool|array<string, mixed>>
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -757,7 +757,7 @@ abstract class AbstractFixerConfig extends Config
     }
 
     /**
-     * @return array<string, bool|array<string, mixed>>
+     * @return array<string|class-string<FixerInterface>, bool|array<string, mixed>>
      */
     private function getPhpUnitRules(): array
     {
@@ -831,7 +831,7 @@ abstract class AbstractFixerConfig extends Config
     /**
      * These are experimental rules.
      *
-     * @return array<string, bool|array<string, mixed>>
+     * @return array<string|class-string<FixerInterface>, bool|array<string, mixed>>
      */
     private function getTypeInferRules(): array
     {
@@ -848,7 +848,7 @@ abstract class AbstractFixerConfig extends Config
     }
 
     /**
-     * @param array<string, bool|array<string, mixed>> $additionalRules
+     * @param array<string|class-string<FixerInterface>, bool|array<string, mixed>> $additionalRules
      */
     final public function setAdditionalRules(array $additionalRules): self
     {

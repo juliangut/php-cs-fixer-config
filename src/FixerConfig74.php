@@ -17,17 +17,11 @@ use PhpCsFixerCustomFixers\Fixer\NumericLiteralSeparatorFixer;
 
 class FixerConfig74 extends AbstractFixerConfig
 {
-    /**
-     * @inheritDoc
-     */
     protected function getRequiredPhpVersion(): string
     {
         return '7.4.0';
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getFixerRules(): array
     {
         $rules = array_merge(

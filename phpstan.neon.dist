@@ -3,7 +3,6 @@ includes:
 
 parameters:
   level: max
-  reportUnmatchedIgnoredErrors: false
   checkMissingCallableSignature: true
   tipsOfTheDay: false
   errorFormat: compact
@@ -11,10 +10,3 @@ parameters:
     maximumNumberOfProcesses: 7
   paths:
     - src
-  ignoreErrors:
-    - message: '#^Class .+Fixer not found\.$#'
-      paths:
-        - src/AbstractFixerConfig.php
-        - src/FixerConfig74.php
-        - src/FixerConfig80.php
-        - src/FixerConfig81.php

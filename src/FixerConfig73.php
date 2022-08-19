@@ -13,9 +13,6 @@ namespace Jgut\CS\Fixer;
 
 class FixerConfig73 extends AbstractFixerConfig
 {
-    /**
-     * @inheritDoc
-     */
     protected function getRequiredPhpVersion(): string
     {
         return '7.3.0';

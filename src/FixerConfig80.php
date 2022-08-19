@@ -22,17 +22,11 @@ use PhpCsFixerCustomFixers\Fixer\StringableInterfaceFixer;
 
 class FixerConfig80 extends FixerConfig74
 {
-    /**
-     * @inheritDoc
-     */
     protected function getRequiredPhpVersion(): string
     {
         return '8.0.0';
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getFixerRules(): array
     {
         $rules = array_merge(
