@@ -7,11 +7,11 @@ lint-php:
 
 .PHONY: lint-phpcs
 lint-phpcs:
-	vendor/bin/phpcs --standard=PSR12 src
+	vendor/bin/phpcs --standard=phpcs.xml.dist src
 
 .PHONY: lint-phpcs-fixer
 lint-phpcs-fixer:
-	PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose --ansi
+	vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --verbose --ansi
 
 .PHONY: lint
 lint:
@@ -22,7 +22,7 @@ lint:
 
 .PHONY: fix-phpcbf
 fix-phpcbf:
-	vendor/bin/phpcbf --standard=PSR12 src
+	vendor/bin/phpcbf --standard=phpcs.xml.dist src
 
 .PHONY: fix-phpcs-fixer
 fix-phpcs-fixer:

@@ -12,19 +12,10 @@ declare(strict_types=1);
 namespace Jgut\CS\Fixer;
 
 use Composer\InstalledVersions;
-use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\Basic\OctalNotationFixer;
 use PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer;
-use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
-use PhpCsFixer\Fixer\LanguageConstruct\GetClassToClassKeywordFixer;
-use PhpCsFixer\Fixer\Operator\AssignNullCoalescingToCoalesceEqualFixer;
-use PhpCsFixer\Fixer\Operator\NoUselessNullsafeOperatorFixer;
-use PhpCsFixerCustomFixers\Fixer\MultilinePromotedPropertiesFixer;
-use PhpCsFixerCustomFixers\Fixer\NumericLiteralSeparatorFixer;
-use PhpCsFixerCustomFixers\Fixer\PromotedConstructorPropertyFixer;
-use PhpCsFixerCustomFixers\Fixer\StringableInterfaceFixer;
 
-class FixerConfig81 extends AbstractFixerConfig
+class FixerConfig81 extends FixerConfig80
 {
     /**
      * @inheritDoc
@@ -51,14 +42,6 @@ class FixerConfig81 extends AbstractFixerConfig
                         'case' => 'one',
                     ],
                 ],
-                NumericLiteralSeparatorFixer::class => [
-                    'decimal' => true,
-                    'float' => true,
-                ],
-                TrailingCommaInMultilineFixer::class => [
-                    'elements' => ['arrays', 'arguments', 'parameters'],
-                    'after_heredoc' => true,
-                ],
             ],
         );
 
@@ -70,35 +53,7 @@ class FixerConfig81 extends AbstractFixerConfig
         );
 
         if (version_compare($phpCsFixerVersion, '3.2', '>=')) {
-            $rules[AssignNullCoalescingToCoalesceEqualFixer::class] = true;
-            $rules[ModernizeStrposFixer::class] = true;
             $rules[OctalNotationFixer::class] = true;
-        }
-
-        if (version_compare($phpCsFixerVersion, '3.5', '>=')) {
-            $rules[GetClassToClassKeywordFixer::class] = true;
-        }
-
-        if (version_compare($phpCsFixerVersion, '3.9.1', '>=')) {
-            $rules[NoUselessNullsafeOperatorFixer::class] = true;
-        }
-
-        /** @var string $kubawerlosVersion */
-        $kubawerlosVersion = preg_replace(
-            '/^v/',
-            '',
-            InstalledVersions::getPrettyVersion('kubawerlos/php-cs-fixer-custom-fixers') ?? '',
-        );
-
-        if (version_compare($kubawerlosVersion, '3.0', '>=')) {
-            $rules[StringableInterfaceFixer::class] = true;
-        }
-
-        if (version_compare($kubawerlosVersion, '3.1', '>=')) {
-            $rules[MultilinePromotedPropertiesFixer::class] = true;
-            $rules[PromotedConstructorPropertyFixer::class] = [
-                'promote_only_existing_properties' => false,
-            ];
         }
 
         return $rules;

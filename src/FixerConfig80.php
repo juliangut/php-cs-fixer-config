@@ -15,12 +15,12 @@ use Composer\InstalledVersions;
 use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
 use PhpCsFixer\Fixer\LanguageConstruct\GetClassToClassKeywordFixer;
-use PhpCsFixer\Fixer\Operator\AssignNullCoalescingToCoalesceEqualFixer;
 use PhpCsFixer\Fixer\Operator\NoUselessNullsafeOperatorFixer;
-use PhpCsFixerCustomFixers\Fixer\NumericLiteralSeparatorFixer;
+use PhpCsFixerCustomFixers\Fixer\MultilinePromotedPropertiesFixer;
+use PhpCsFixerCustomFixers\Fixer\PromotedConstructorPropertyFixer;
 use PhpCsFixerCustomFixers\Fixer\StringableInterfaceFixer;
 
-class FixerConfig80 extends AbstractFixerConfig
+class FixerConfig80 extends FixerConfig74
 {
     /**
      * @inheritDoc
@@ -38,10 +38,11 @@ class FixerConfig80 extends AbstractFixerConfig
         $rules = array_merge(
             parent::getFixerRules(),
             [
-                NumericLiteralSeparatorFixer::class => [
-                    'decimal' => true,
-                    'float' => true,
+                MultilinePromotedPropertiesFixer::class => true,
+                PromotedConstructorPropertyFixer::class => [
+                    'promote_only_existing_properties' => false,
                 ],
+                StringableInterfaceFixer::class => true,
                 TrailingCommaInMultilineFixer::class => [
                     'elements' => ['arrays', 'arguments', 'parameters'],
                     'after_heredoc' => true,
@@ -57,7 +58,6 @@ class FixerConfig80 extends AbstractFixerConfig
         );
 
         if (version_compare($phpCsFixerVersion, '3.2', '>=')) {
-            $rules[AssignNullCoalescingToCoalesceEqualFixer::class] = true;
             $rules[ModernizeStrposFixer::class] = true;
         }
 
@@ -67,17 +67,6 @@ class FixerConfig80 extends AbstractFixerConfig
 
         if (version_compare($phpCsFixerVersion, '3.9.1', '>=')) {
             $rules[NoUselessNullsafeOperatorFixer::class] = true;
-        }
-
-        /** @var string $kubawerlosVersion */
-        $kubawerlosVersion = preg_replace(
-            '/^v/',
-            '',
-            InstalledVersions::getPrettyVersion('kubawerlos/php-cs-fixer-custom-fixers') ?? '',
-        );
-
-        if (version_compare($kubawerlosVersion, '3.0', '>=')) {
-            $rules[StringableInterfaceFixer::class] = true;
         }
 
         return $rules;

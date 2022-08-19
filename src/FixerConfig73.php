@@ -20,12 +20,4 @@ class FixerConfig73 extends AbstractFixerConfig
     {
         return '7.3.0';
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getFixerRules(): array
-    {
-        return parent::getFixerRules();
-    }
 }
