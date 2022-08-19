@@ -24,21 +24,7 @@ class FixerConfig81 extends FixerConfig80
 
     protected function getFixerRules(): array
     {
-        $rules = array_merge(
-            parent::getFixerRules(),
-            [
-                // friendsofphp/php-cs-fixer
-                ClassAttributesSeparationFixer::class => [
-                    'elements' => [
-                        'trait_import' => 'one',
-                        'const' => 'none',
-                        'property' => 'one',
-                        'method' => 'one',
-                        'case' => 'one',
-                    ],
-                ],
-            ],
-        );
+        $rules = parent::getFixerRules();
 
         /** @var string $phpCsFixerVersion */
         $phpCsFixerVersion = preg_replace(
@@ -49,6 +35,18 @@ class FixerConfig81 extends FixerConfig80
 
         if (version_compare($phpCsFixerVersion, '3.2', '>=')) {
             $rules[OctalNotationFixer::class] = true;
+        }
+
+        if (version_compare($phpCsFixerVersion, '3.7', '>=')) {
+            $rules[ClassAttributesSeparationFixer::class] = [
+                'elements' => [
+                    'trait_import' => 'one',
+                    'const' => 'none',
+                    'property' => 'one',
+                    'method' => 'one',
+                    'case' => 'one',
+                ],
+            ];
         }
 
         return $rules;

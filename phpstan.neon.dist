@@ -12,6 +12,7 @@ parameters:
   paths:
     - src
   ignoreErrors:
+    # Depending on the versions installed some classes may not exist
     - message: '#^Class .+Fixer not found\.$#'
       paths:
         - src/AbstractFixerConfig.php
