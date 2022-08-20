@@ -117,6 +117,7 @@ use PhpCsFixer\Fixer\ListNotation\ListSyntaxFixer;
 use PhpCsFixer\Fixer\NamespaceNotation\CleanNamespaceFixer;
 use PhpCsFixer\Fixer\NamespaceNotation\NoLeadingNamespaceWhitespaceFixer;
 use PhpCsFixer\Fixer\Naming\NoHomoglyphNamesFixer;
+use PhpCsFixer\Fixer\Operator\AssignNullCoalescingToCoalesceEqualFixer;
 use PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Operator\ConcatSpaceFixer;
 use PhpCsFixer\Fixer\Operator\IncrementStyleFixer;
@@ -215,6 +216,7 @@ use PhpCsFixerCustomFixers\Fixer\NoTrailingCommaInSinglelineFixer;
 use PhpCsFixerCustomFixers\Fixer\NoUselessCommentFixer;
 use PhpCsFixerCustomFixers\Fixer\NoUselessDirnameCallFixer;
 use PhpCsFixerCustomFixers\Fixer\NoUselessParenthesisFixer;
+use PhpCsFixerCustomFixers\Fixer\NumericLiteralSeparatorFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocArrayStyleFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocNoSuperfluousParamFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocParamOrderFixer;
@@ -662,6 +664,10 @@ abstract class AbstractFixerConfig extends Config
             NoUselessCommentFixer::class => true,
             NoUselessDirnameCallFixer::class => true,
             NoUselessParenthesisFixer::class => true,
+            NumericLiteralSeparatorFixer::class => [
+                'decimal' => true,
+                'float' => true,
+            ],
             PhpdocArrayStyleFixer::class => true,
             PhpdocNoSuperfluousParamFixer::class => true,
             PhpdocParamOrderFixer::class => true,
@@ -688,6 +694,7 @@ abstract class AbstractFixerConfig extends Config
         );
 
         if (version_compare($phpCsFixerVersion, '3.2', '>=')) {
+            $rules[AssignNullCoalescingToCoalesceEqualFixer::class] = true;
             $rules[ControlStructureContinuationPositionFixer::class] = true;
             $rules[IntegerLiteralCaseFixer::class] = true;
             $rules[NoSpaceAroundDoubleColonFixer::class] = true;

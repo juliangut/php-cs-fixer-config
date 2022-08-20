@@ -9,12 +9,10 @@
 
 declare(strict_types=1);
 
-use Jgut\CS\Fixer\FixerConfig73;
 use Jgut\CS\Fixer\FixerConfig74;
 use Jgut\CS\Fixer\FixerConfig80;
 use Jgut\CS\Fixer\FixerConfig81;
 use PhpCsFixer\Finder;
-use PhpCsFixerCustomFixers\Fixer\NumericLiteralSeparatorFixer;
 
 $header = <<<'HEADER'
 (c) 2021-{{year}} Julián Gutiérrez <juliangut@gmail.com>
@@ -27,25 +25,14 @@ $finder = Finder::create()
     ->ignoreDotFiles(false)
     ->exclude(['vendor'])
     ->in(__DIR__)
-    ->name('.php-cs-fixer.php');
+    ->name(__FILE__);
 
-if (\PHP_VERSION_ID >= 80100) {
-    $configurator = (new FixerConfig81())
-        ->setAdditionalRules([
-            NumericLiteralSeparatorFixer::class => false,
-        ]);
-} elseif (\PHP_VERSION_ID >= 80000) {
-    $configurator = (new FixerConfig80())
-        ->setAdditionalRules([
-            NumericLiteralSeparatorFixer::class => false,
-        ]);
-} elseif (\PHP_VERSION_ID >= 70400) {
-    $configurator = (new FixerConfig74())
-        ->setAdditionalRules([
-            NumericLiteralSeparatorFixer::class => false,
-        ]);
+if (\PHP_VERSION_ID >= 80_100) {
+    $configurator = new FixerConfig81();
+} elseif (\PHP_VERSION_ID >= 80_000) {
+    $configurator = new FixerConfig80();
 } else {
-    $configurator = new FixerConfig73();
+    $configurator = new FixerConfig74();
 }
 
 return $configurator

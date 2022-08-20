@@ -11,41 +11,10 @@ declare(strict_types=1);
 
 namespace Jgut\CS\Fixer;
 
-use Composer\InstalledVersions;
-use PhpCsFixer\Fixer\Operator\AssignNullCoalescingToCoalesceEqualFixer;
-use PhpCsFixerCustomFixers\Fixer\NumericLiteralSeparatorFixer;
-
 class FixerConfig74 extends AbstractFixerConfig
 {
     protected function getRequiredPhpVersion(): string
     {
         return '7.4.0';
-    }
-
-    protected function getFixerRules(): array
-    {
-        $rules = array_merge(
-            parent::getFixerRules(),
-            [
-                // kubawerlos/php-cs-fixer-custom-fixers
-                NumericLiteralSeparatorFixer::class => [
-                    'decimal' => true,
-                    'float' => true,
-                ],
-            ],
-        );
-
-        /** @var string $phpCsFixerVersion */
-        $phpCsFixerVersion = preg_replace(
-            '/^v/',
-            '',
-            InstalledVersions::getPrettyVersion('friendsofphp/php-cs-fixer') ?? '',
-        );
-
-        if (version_compare($phpCsFixerVersion, '3.2', '>=')) {
-            $rules[AssignNullCoalescingToCoalesceEqualFixer::class] = true;
-        }
-
-        return $rules;
     }
 }

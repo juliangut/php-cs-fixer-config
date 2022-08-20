@@ -18,7 +18,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.4|^8.0",
         "friendsofphp/php-cs-fixer": "^3.1",
         "kubawerlos/php-cs-fixer-custom-fixers": "^3.7",
         "nikic/php-parser": "^4.7",
