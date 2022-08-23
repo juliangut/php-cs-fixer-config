@@ -10,7 +10,6 @@
     <!-- squizlabs/php_codesniffer -->
     <rule ref="Squiz.Commenting.EmptyCatchComment" />
     <rule ref="Generic.WhiteSpace.SpreadOperatorSpacingAfter" />
-    <rule ref="Generic.WhiteSpace.SpreadOperatorSpacingAfter" />
 
     <!-- slevomat/coding-standard -->
     <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition">
