@@ -8,8 +8,23 @@
     <rule ref="PSR12"/>
 
     <!-- squizlabs/php_codesniffer -->
-    <rule ref="Squiz.Commenting.EmptyCatchComment" />
-    <rule ref="Generic.WhiteSpace.SpreadOperatorSpacingAfter" />
+    <rule ref="Generic.PHP.DeprecatedFunctions" />
+    <rule ref="Generic.PHP.DisallowRequestSuperglobal" />
+    <rule ref="Squiz.PHP.Eval" />
+    <rule ref="Generic.Commenting.Fixme" />
+    <rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall" />
+    <rule ref="Generic.CodeAnalysis.JumbledIncrementer" />
+    <rule ref="Squiz.Scope.MemberVarScope" />
+    <rule ref="Generic.Metrics.NestingLevel" >
+        <properties>
+            <property name="nestingLevel" value="3" />
+            <property name="absoluteNestingLevel" value="3" />
+        </properties>
+    </rule>
+    <rule ref="Generic.PHP.NoSilencedErrors" />
+    <rule ref="Squiz.Scope.StaticThisUsage" />
+    <rule ref="Generic.Commenting.Todo" />
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod" />
 
     <!-- slevomat/coding-standard -->
     <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition">

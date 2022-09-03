@@ -12,6 +12,9 @@ parameters:
   paths:
     - src
   ignoreErrors:
+    # Depending on the versions installed some classes may be deprecated
+    - message: '#^Fetching class constant class of deprecated class PhpCsFixer\\Fixer\\(Array|Function)Notation\\NoTrailingCommaInSingleline(Array|FunctionCall)Fixer\.$#'
+      path: src/AbstractFixerConfig.php
     # Depending on the versions installed some classes may not exist
     - message: '#^Class .+Fixer not found\.$#'
       paths:

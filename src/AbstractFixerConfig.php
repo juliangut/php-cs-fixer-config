@@ -250,7 +250,7 @@ abstract class AbstractFixerConfig extends Config
     private $phpUnit = false;
 
     /**
-     * @var array<string|class-string<FixerInterface>, bool|array<string, mixed>>
+     * @var array<string|class-string<FixerInterface>, array<string, mixed>|bool>
      */
     private $additionalRules = [];
 
@@ -280,7 +280,7 @@ abstract class AbstractFixerConfig extends Config
     /**
      * @inheritDoc
      *
-     * @return array<string, bool|array<string, mixed>>
+     * @return array<string, array<string, mixed>|bool>
      */
     final public function getRules(): array
     {
@@ -319,7 +319,7 @@ abstract class AbstractFixerConfig extends Config
     }
 
     /**
-     * @return array<string|class-string<FixerInterface>, bool|array<string, mixed>>
+     * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -745,6 +745,20 @@ abstract class AbstractFixerConfig extends Config
             $rules[NoMultipleStatementsPerLineFixer::class] = true;
         }
 
+        if (version_compare($phpCsFixerVersion, '3.10', '>=')) {
+            $rules[WhitespaceAfterCommaInArrayFixer::class] = [
+                'ensure_single_space' => true,
+            ];
+        }
+
+        if (version_compare($phpCsFixerVersion, '3.11', '>=')) {
+            unset(
+                $rules[NoTrailingCommaInSinglelineArrayFixer::class],
+                $rules[NoTrailingCommaInSinglelineFunctionCallFixer::class]
+            );
+            $rules[NoTrailingCommaInSinglelineFixer::class] = true;
+        }
+
         /** @var string $kubawerlosVersion */
         $kubawerlosVersion = preg_replace(
             '/^v/',
@@ -764,7 +778,7 @@ abstract class AbstractFixerConfig extends Config
     }
 
     /**
-     * @return array<string|class-string<FixerInterface>, bool|array<string, mixed>>
+     * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
      */
     private function getPhpUnitRules(): array
     {
@@ -838,7 +852,7 @@ abstract class AbstractFixerConfig extends Config
     /**
      * These are experimental rules.
      *
-     * @return array<string|class-string<FixerInterface>, bool|array<string, mixed>>
+     * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
      */
     private function getTypeInferRules(): array
     {
@@ -855,7 +869,7 @@ abstract class AbstractFixerConfig extends Config
     }
 
     /**
-     * @param array<string|class-string<FixerInterface>, bool|array<string, mixed>> $additionalRules
+     * @param array<string|class-string<FixerInterface>, array<string, mixed>|bool> $additionalRules
      */
     final public function setAdditionalRules(array $additionalRules): self
     {
