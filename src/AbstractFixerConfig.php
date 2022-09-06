@@ -57,6 +57,7 @@ use PhpCsFixer\Fixer\ClassNotation\NoUnneededFinalMethodFixer;
 use PhpCsFixer\Fixer\ClassNotation\ProtectedToPrivateFixer;
 use PhpCsFixer\Fixer\ClassNotation\SelfAccessorFixer;
 use PhpCsFixer\Fixer\ClassNotation\SelfStaticAccessorFixer;
+use PhpCsFixer\Fixer\ClassNotation\SingleTraitInsertPerStatementFixer;
 use PhpCsFixer\Fixer\ClassUsage\DateTimeImmutableFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\Comment\MultilineCommentOpeningClosingFixer;
@@ -201,6 +202,7 @@ use PhpCsFixer\Fixer\Whitespace\HeredocIndentationFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
 use PhpCsFixer\Fixer\Whitespace\NoExtraBlankLinesFixer;
 use PhpCsFixer\Fixer\Whitespace\NoSpacesAroundOffsetFixer;
+use PhpCsFixer\Fixer\Whitespace\NoWhitespaceInBlankLineFixer;
 use PhpCsFixer\Fixer\Whitespace\StatementIndentationFixer;
 use PhpCsFixer\Fixer\Whitespace\TypesSpacesFixer;
 use PhpCsFixerCustomFixers\Fixer\CommentSurroundedBySpacesFixer;
@@ -520,6 +522,7 @@ abstract class AbstractFixerConfig extends Config
             NoWhitespaceBeforeCommaInArrayFixer::class => [
                 'after_heredoc' => true,
             ],
+            NoWhitespaceInBlankLineFixer::class => true,
             NonPrintableCharacterFixer::class => [
                 'use_escape_sequences_in_strings' => false,
             ],
@@ -616,6 +619,7 @@ abstract class AbstractFixerConfig extends Config
                 'strings_containing_single_quote_chars' => false,
             ],
             SingleSpaceAfterConstructFixer::class => true,
+            SingleTraitInsertPerStatementFixer::class => true,
             SpaceAfterSemicolonFixer::class => [
                 'remove_in_empty_for_expressions' => false,
             ],
