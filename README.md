@@ -90,11 +90,20 @@ return (new FixerConfig80())
     ->enablePhpUnitRules();
 ```
 
-#### Type Infer
+#### Doctrine
 
-If you're in the middle of "type hinting everything", you could enable type inference rules and let php-cs-fixer try to migrate types from annotations into properties, parameters and returns
+If you work with Doctrine
 
-Be aware these rules are experimental and will need human supervision after fixing, so you are advised NOT to permanently enable type inference
+```php
+return (new FixerConfig80())
+    ->enableDoctrineRules();
+```
+
+#### Type Inference
+
+If you're in the middle of "type hinting everything", try enabling type inference rules and let php-cs-fixer migrate types from annotations into properties, parameters and return types
+
+Be aware __these rules are experimental__ and will need human supervision after fixing, so you are advised NOT to permanently enable type inference
 
 ```php
 return (new FixerConfig80())
@@ -170,7 +179,7 @@ return (new FixerConfig80())
     ->setHeader($header)
     ->setAdditionalRules([
         SingleLineThrowFixer::class => true, // Preferred way
-        'single_line_throw' => true, // Same as before
+        'single_line_throw' => true, // Same as above
     ])
     ->setFinder($finder);
 ```
@@ -197,7 +206,7 @@ class CustomFixerConfig extends FixerConfig80
             parent::getFixerRules(),
             [
                 SingleLineThrowFixer::class => true, // Preferred way
-                'single_line_throw' => true, // Same as before
+                'single_line_throw' => true, // Same as above
             ]
         );
     }
