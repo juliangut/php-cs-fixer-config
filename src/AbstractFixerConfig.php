@@ -78,6 +78,10 @@ use PhpCsFixer\Fixer\ControlStructure\SimplifiedIfReturnFixer;
 use PhpCsFixer\Fixer\ControlStructure\SwitchContinueToBreakFixer;
 use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
 use PhpCsFixer\Fixer\ControlStructure\YodaStyleFixer;
+use PhpCsFixer\Fixer\DoctrineAnnotation\DoctrineAnnotationArrayAssignmentFixer;
+use PhpCsFixer\Fixer\DoctrineAnnotation\DoctrineAnnotationBracesFixer;
+use PhpCsFixer\Fixer\DoctrineAnnotation\DoctrineAnnotationIndentationFixer;
+use PhpCsFixer\Fixer\DoctrineAnnotation\DoctrineAnnotationSpacesFixer;
 use PhpCsFixer\Fixer\FixerInterface;
 use PhpCsFixer\Fixer\FunctionNotation\CombineNestedDirnameFixer;
 use PhpCsFixer\Fixer\FunctionNotation\DateTimeCreateFromFormatCallFixer;
@@ -209,6 +213,7 @@ use PhpCsFixerCustomFixers\Fixer\CommentSurroundedBySpacesFixer;
 use PhpCsFixerCustomFixers\Fixer\DataProviderNameFixer;
 use PhpCsFixerCustomFixers\Fixer\IssetToArrayKeyExistsFixer;
 use PhpCsFixerCustomFixers\Fixer\NoCommentedOutCodeFixer;
+use PhpCsFixerCustomFixers\Fixer\NoDoctrineMigrationsGeneratedCommentFixer;
 use PhpCsFixerCustomFixers\Fixer\NoDuplicatedArrayKeyFixer;
 use PhpCsFixerCustomFixers\Fixer\NoLeadingSlashInGlobalNamespaceFixer;
 use PhpCsFixerCustomFixers\Fixer\NoNullableBooleanTypeFixer;
@@ -217,6 +222,7 @@ use PhpCsFixerCustomFixers\Fixer\NoSuperfluousConcatenationFixer;
 use PhpCsFixerCustomFixers\Fixer\NoTrailingCommaInSinglelineFixer;
 use PhpCsFixerCustomFixers\Fixer\NoUselessCommentFixer;
 use PhpCsFixerCustomFixers\Fixer\NoUselessDirnameCallFixer;
+use PhpCsFixerCustomFixers\Fixer\NoUselessDoctrineRepositoryCommentFixer;
 use PhpCsFixerCustomFixers\Fixer\NoUselessParenthesisFixer;
 use PhpCsFixerCustomFixers\Fixer\NumericLiteralSeparatorFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocArrayStyleFixer;
@@ -227,7 +233,6 @@ use PhpCsFixerCustomFixers\Fixer\PhpdocSelfAccessorFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocTypesCommaSpacesFixer;
 use PhpCsFixerCustomFixers\Fixer\PhpdocTypesTrimFixer;
 use PhpCsFixerCustomFixers\Fixers as KubawerlosFixes;
-use PHPUnit\Exception;
 use ReflectionClass;
 use RuntimeException;
 
@@ -244,12 +249,17 @@ abstract class AbstractFixerConfig extends Config
     /**
      * @var bool
      */
-    private $typeInfer = false;
+    private $phpUnit = false;
 
     /**
      * @var bool
      */
-    private $phpUnit = false;
+    private $doctrine = false;
+
+    /**
+     * @var bool
+     */
+    private $typeInfer = false;
 
     /**
      * @var array<string|class-string<FixerInterface>, array<string, mixed>|bool>
@@ -777,6 +787,7 @@ abstract class AbstractFixerConfig extends Config
         return array_merge(
             $rules,
             $this->getPhpUnitRules(),
+            $this->getDoctrineRules(),
             $this->getTypeInferRules(),
         );
     }
@@ -788,10 +799,6 @@ abstract class AbstractFixerConfig extends Config
     {
         if ($this->phpUnit === false) {
             return [];
-        }
-
-        if (!interface_exists(Exception::class)) {
-            throw new RuntimeException('PHPUnit rules cannot be used as PHPUnit is not installed.');
         }
 
         return [
@@ -854,6 +861,33 @@ abstract class AbstractFixerConfig extends Config
     }
 
     /**
+     * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
+     */
+    private function getDoctrineRules(): array
+    {
+        if ($this->doctrine === false) {
+            return [];
+        }
+
+        return [
+            // friendsofphp/php-cs-fixer
+            DoctrineAnnotationArrayAssignmentFixer::class => true,
+            DoctrineAnnotationBracesFixer::class => true,
+            DoctrineAnnotationIndentationFixer::class => true,
+            DoctrineAnnotationSpacesFixer::class => [
+                'before_array_assignments_equals' => false,
+                'after_array_assignments_equals' => false,
+                'before_array_assignments_colon' => false,
+                'after_array_assignments_colon' => false,
+            ],
+
+            // kubawerlos/php-cs-fixer-custom-fixers
+            NoDoctrineMigrationsGeneratedCommentFixer::class => true,
+            NoUselessDoctrineRepositoryCommentFixer::class => true,
+        ];
+    }
+
+    /**
      * These are experimental rules.
      *
      * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
@@ -907,6 +941,13 @@ abstract class AbstractFixerConfig extends Config
     final public function enablePhpUnitRules(bool $phpUnit = true): self
     {
         $this->phpUnit = $phpUnit;
+
+        return $this;
+    }
+
+    final public function enableDoctrineRules(bool $doctrine = true): self
+    {
+        $this->doctrine = $doctrine;
 
         return $this;
     }
