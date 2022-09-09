@@ -332,15 +332,28 @@ abstract class AbstractFixerConfig extends Config
 
     /**
      * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function getFixerRules(): array
     {
+        return array_merge(
+            $this->getPhpCsFixerRules(),
+            $this->getKubawerlosPhpCsFixerRules(),
+            $this->getPedroTrollerPhpCsFixerRules(),
+            $this->getPhpUnitPhpCsFixerRules(),
+            $this->getDoctrinePhpCsFixerRules(),
+            $this->getTypeInferPhpCsFixerRules(),
+        );
+    }
+
+    /**
+     * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    private function getPhpCsFixerRules(): array
+    {
         $rules = [
-            // friendsofphp/php-cs-fixer
             '@PSR12' => true,
             AlignMultilineCommentFixer::class => [
                 'comment_type' => 'phpdocs_like',
@@ -660,44 +673,6 @@ abstract class AbstractFixerConfig extends Config
                 'less_and_greater' => false,
                 'always_move_variable' => false,
             ],
-
-            // kubawerlos/php-cs-fixer-custom-fixers
-            CommentSurroundedBySpacesFixer::class => true,
-            IssetToArrayKeyExistsFixer::class => true,
-            NoCommentedOutCodeFixer::class => true,
-            NoDuplicatedArrayKeyFixer::class => [
-                'ignore_expressions' => true,
-            ],
-            NoLeadingSlashInGlobalNamespaceFixer::class => true,
-            NoNullableBooleanTypeFixer::class => true,
-            NoPhpStormGeneratedCommentFixer::class => true,
-            NoSuperfluousConcatenationFixer::class => [
-                'allow_preventing_trailing_spaces' => true,
-            ],
-            NoTrailingCommaInSinglelineFixer::class => true,
-            NoUselessCommentFixer::class => true,
-            NoUselessDirnameCallFixer::class => true,
-            NoUselessParenthesisFixer::class => true,
-            NumericLiteralSeparatorFixer::class => [
-                'decimal' => true,
-                'float' => true,
-            ],
-            PhpdocArrayStyleFixer::class => true,
-            PhpdocNoSuperfluousParamFixer::class => true,
-            PhpdocParamOrderFixer::class => true,
-            PhpdocParamTypeFixer::class => true,
-            PhpdocSelfAccessorFixer::class => true,
-            PhpdocTypesTrimFixer::class => true,
-
-            // pedrotroller/php-cs-custom-fixer
-            CommentLineToPhpdocBlockFixer::class => true,
-            ExceptionsPunctuationFixer::class => true,
-            ForbiddenFunctionsFixer::class => [
-                'functions' => ['var_dump', 'die'],
-            ],
-            LineBreakBetweenMethodArgumentsFixer::class => [
-                'max-args' => false,
-            ],
         ];
 
         /** @var string $phpCsFixerVersion */
@@ -773,6 +748,43 @@ abstract class AbstractFixerConfig extends Config
             $rules[NoTrailingCommaInSinglelineFixer::class] = true;
         }
 
+        return $rules;
+    }
+
+    /**
+     * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
+     */
+    private function getKubawerlosPhpCsFixerRules(): array
+    {
+        $rules = [
+            CommentSurroundedBySpacesFixer::class => true,
+            IssetToArrayKeyExistsFixer::class => true,
+            NoCommentedOutCodeFixer::class => true,
+            NoDuplicatedArrayKeyFixer::class => [
+                'ignore_expressions' => true,
+            ],
+            NoLeadingSlashInGlobalNamespaceFixer::class => true,
+            NoNullableBooleanTypeFixer::class => true,
+            NoPhpStormGeneratedCommentFixer::class => true,
+            NoSuperfluousConcatenationFixer::class => [
+                'allow_preventing_trailing_spaces' => true,
+            ],
+            NoTrailingCommaInSinglelineFixer::class => true,
+            NoUselessCommentFixer::class => true,
+            NoUselessDirnameCallFixer::class => true,
+            NoUselessParenthesisFixer::class => true,
+            NumericLiteralSeparatorFixer::class => [
+                'decimal' => true,
+                'float' => true,
+            ],
+            PhpdocArrayStyleFixer::class => true,
+            PhpdocNoSuperfluousParamFixer::class => true,
+            PhpdocParamOrderFixer::class => true,
+            PhpdocParamTypeFixer::class => true,
+            PhpdocSelfAccessorFixer::class => true,
+            PhpdocTypesTrimFixer::class => true,
+        ];
+
         /** @var string $kubawerlosVersion */
         $kubawerlosVersion = preg_replace(
             '/^v/',
@@ -784,18 +796,30 @@ abstract class AbstractFixerConfig extends Config
             $rules[PhpdocTypesCommaSpacesFixer::class] = true;
         }
 
-        return array_merge(
-            $rules,
-            $this->getPhpUnitRules(),
-            $this->getDoctrineRules(),
-            $this->getTypeInferRules(),
-        );
+        return $rules;
     }
 
     /**
      * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
      */
-    private function getPhpUnitRules(): array
+    private function getPedroTrollerPhpCsFixerRules(): array
+    {
+        return [
+            CommentLineToPhpdocBlockFixer::class => true,
+            ExceptionsPunctuationFixer::class => true,
+            ForbiddenFunctionsFixer::class => [
+                'functions' => ['sizeof', 'var_dump', 'die'],
+            ],
+            LineBreakBetweenMethodArgumentsFixer::class => [
+                'max-args' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
+     */
+    private function getPhpUnitPhpCsFixerRules(): array
     {
         if ($this->phpUnit === false) {
             return [];
@@ -863,7 +887,7 @@ abstract class AbstractFixerConfig extends Config
     /**
      * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
      */
-    private function getDoctrineRules(): array
+    private function getDoctrinePhpCsFixerRules(): array
     {
         if ($this->doctrine === false) {
             return [];
@@ -892,7 +916,7 @@ abstract class AbstractFixerConfig extends Config
      *
      * @return array<string|class-string<FixerInterface>, array<string, mixed>|bool>
      */
-    private function getTypeInferRules(): array
+    private function getTypeInferPhpCsFixerRules(): array
     {
         if ($this->typeInfer === false) {
             return [];
