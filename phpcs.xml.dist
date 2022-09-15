@@ -13,11 +13,6 @@
             <property name="maxPercentage" value="70" />
         </properties>
     </rule>
-    <rule ref="Generic.Metrics.CyclomaticComplexity">
-        <properties>
-            <property name="absoluteComplexity" value="10" />
-        </properties>
-    </rule>
     <rule ref="Generic.PHP.DeprecatedFunctions" />
     <rule ref="Generic.PHP.DisallowRequestSuperglobal" />
     <rule ref="Generic.CodeAnalysis.EmptyStatement" />

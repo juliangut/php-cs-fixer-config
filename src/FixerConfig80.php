@@ -20,6 +20,9 @@ use PhpCsFixerCustomFixers\Fixer\MultilinePromotedPropertiesFixer;
 use PhpCsFixerCustomFixers\Fixer\PromotedConstructorPropertyFixer;
 use PhpCsFixerCustomFixers\Fixer\StringableInterfaceFixer;
 
+/**
+ * @phpstan-type PhpCsFixerRuleList array<string|class-string<FixerInterface>, array<string, mixed>|bool>
+ */
 class FixerConfig80 extends FixerConfig74
 {
     protected function getRequiredPhpVersion(): string
@@ -29,23 +32,24 @@ class FixerConfig80 extends FixerConfig74
 
     protected function getFixerRules(): array
     {
-        $rules = array_merge(
+        return array_merge(
             parent::getFixerRules(),
-            [
-                // friendsofphp/php-cs-fixer
-                TrailingCommaInMultilineFixer::class => [
-                    'elements' => ['arrays', 'arguments', 'parameters'],
-                    'after_heredoc' => true,
-                ],
-
-                // kubawerlos/php-cs-fixer-custom-fixers
-                MultilinePromotedPropertiesFixer::class => true,
-                PromotedConstructorPropertyFixer::class => [
-                    'promote_only_existing_properties' => false,
-                ],
-                StringableInterfaceFixer::class => true,
-            ],
+            $this->getPhpCsFixerRules(),
+            $this->getKubawerlosFixerRules(),
         );
+    }
+
+    /**
+     * @return PhpCsFixerRuleList
+     */
+    private function getPhpCsFixerRules(): array
+    {
+        $rules = [
+            TrailingCommaInMultilineFixer::class => [
+                'elements' => ['arrays', 'arguments', 'parameters'],
+                'after_heredoc' => true,
+            ],
+        ];
 
         /** @var string $phpCsFixerVersion */
         $phpCsFixerVersion = preg_replace(
@@ -67,5 +71,19 @@ class FixerConfig80 extends FixerConfig74
         }
 
         return $rules;
+    }
+
+    /**
+     * @return PhpCsFixerRuleList
+     */
+    private function getKubawerlosFixerRules(): array
+    {
+        return [
+            MultilinePromotedPropertiesFixer::class => true,
+            PromotedConstructorPropertyFixer::class => [
+                'promote_only_existing_properties' => false,
+            ],
+            StringableInterfaceFixer::class => true,
+        ];
     }
 }

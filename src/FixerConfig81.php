@@ -15,6 +15,9 @@ use Composer\InstalledVersions;
 use PhpCsFixer\Fixer\Basic\OctalNotationFixer;
 use PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer;
 
+/**
+ * @phpstan-type PhpCsFixerRuleList array<string|class-string<FixerInterface>, array<string, mixed>|bool>
+ */
 class FixerConfig81 extends FixerConfig80
 {
     protected function getRequiredPhpVersion(): string
@@ -24,7 +27,18 @@ class FixerConfig81 extends FixerConfig80
 
     protected function getFixerRules(): array
     {
-        $rules = parent::getFixerRules();
+        return array_merge(
+            parent::getFixerRules(),
+            $this->getPhpCsFixerRules(),
+        );
+    }
+
+    /**
+     * @return PhpCsFixerRuleList
+     */
+    private function getPhpCsFixerRules(): array
+    {
+        $rules = [];
 
         /** @var string $phpCsFixerVersion */
         $phpCsFixerVersion = preg_replace(
