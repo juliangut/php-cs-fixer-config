@@ -68,6 +68,7 @@
     </rule>
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator" />
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator" />
+    <rule ref="SlevomatCodingStandard.Operators.RequireOnlyStandaloneIncrementAndDecrementOperators" />
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator" />
     <rule ref="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure" />
     <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias" />
