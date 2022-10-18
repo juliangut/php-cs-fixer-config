@@ -176,12 +176,10 @@ use Jgut\CS\Fixer\FixerConfig80;
 use PhpCsFixer\Fixer\FunctionNotation\SingleLineThrowFixer;
 
 return (new FixerConfig80())
-    ->setHeader($header)
     ->setAdditionalRules([
         SingleLineThrowFixer::class => true, // Preferred way
         'single_line_throw' => true, // Same as above
-    ])
-    ->setFinder($finder);
+    ]);
 ```
 
 #### Custom fixer config
@@ -189,16 +187,11 @@ return (new FixerConfig80())
 If you need more control over applied rules or prefer a cleaner setup, you can easily create your custom fixer config instead of setting additional rules
 
 ```php
-use Jgut\CS\Fixer\FixerConfig80;
+use Jgut\CS\Fixer\FixerConfig81;
 use PhpCsFixer\Fixer\FunctionNotation\SingleLineThrowFixer;
 
-class CustomFixerConfig extends FixerConfig80
+class CustomFixerConfig extends FixerConfig81
 {
-    protected function getRequiredPhpVersion(): string
-    {
-        return '8.1.0';
-    }
-
     protected function getFixerRules(): array
     {
         // Return your custom rules, or add/remove rules from parent's getFixerRules()
