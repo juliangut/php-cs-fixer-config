@@ -128,6 +128,7 @@ use PhpCsFixer\Fixer\Operator\ConcatSpaceFixer;
 use PhpCsFixer\Fixer\Operator\IncrementStyleFixer;
 use PhpCsFixer\Fixer\Operator\LogicalOperatorsFixer;
 use PhpCsFixer\Fixer\Operator\NoSpaceAroundDoubleColonFixer;
+use PhpCsFixer\Fixer\Operator\NoUselessConcatOperatorFixer;
 use PhpCsFixer\Fixer\Operator\ObjectOperatorWithoutWhitespaceFixer;
 use PhpCsFixer\Fixer\Operator\OperatorLinebreakFixer;
 use PhpCsFixer\Fixer\Operator\StandardizeIncrementFixer;
@@ -746,6 +747,10 @@ abstract class AbstractFixerConfig extends Config
                 $rules[NoTrailingCommaInSinglelineFunctionCallFixer::class]
             );
             $rules[NoTrailingCommaInSinglelineFixer::class] = true;
+        }
+
+        if (version_compare($phpCsFixerVersion, '3.12', '>=')) {
+            $rules[NoUselessConcatOperatorFixer::class] = true;
         }
 
         if ($this->phpUnit) {
