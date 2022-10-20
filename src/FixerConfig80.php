@@ -21,7 +21,7 @@ use PhpCsFixerCustomFixers\Fixer\PromotedConstructorPropertyFixer;
 use PhpCsFixerCustomFixers\Fixer\StringableInterfaceFixer;
 
 /**
- * @phpstan-type PhpCsFixerRuleList array<string|class-string<FixerInterface>, array<string, mixed>|bool>
+ * @phpstan-import-type PhpCsFixerRuleList from AbstractFixerConfig
  */
 class FixerConfig80 extends FixerConfig74
 {

@@ -16,7 +16,7 @@ use PhpCsFixer\Fixer\Basic\OctalNotationFixer;
 use PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer;
 
 /**
- * @phpstan-type PhpCsFixerRuleList array<string|class-string<FixerInterface>, array<string, mixed>|bool>
+ * @phpstan-import-type PhpCsFixerRuleList from AbstractFixerConfig
  */
 class FixerConfig81 extends FixerConfig80
 {
