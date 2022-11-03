@@ -905,6 +905,7 @@ abstract class AbstractFixerConfig extends Config
             ],
             LineBreakBetweenMethodArgumentsFixer::class => [
                 'max-args' => false,
+                'automatic-argument-merge' => false,
             ],
         ];
     }
