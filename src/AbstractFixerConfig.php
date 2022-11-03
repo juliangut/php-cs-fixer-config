@@ -244,25 +244,13 @@ use RuntimeException;
  */
 abstract class AbstractFixerConfig extends Config
 {
-    /**
-     * @var string|null
-     */
-    private $header;
+    private ?string $header = null;
 
-    /**
-     * @var bool
-     */
-    private $phpUnit = false;
+    private bool $phpUnit = false;
 
-    /**
-     * @var bool
-     */
-    private $doctrine = false;
+    private bool $doctrine = false;
 
-    /**
-     * @var bool
-     */
-    private $typeInfer = false;
+    private bool $typeInfer = false;
 
     /**
      * @var PhpCsFixerRuleList
