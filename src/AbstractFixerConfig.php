@@ -1,7 +1,7 @@
 <?php
 
 /*
- * (c) 2021-2022 Julián Gutiérrez <juliangut@gmail.com>
+ * (c) 2021-2023 Julián Gutiérrez <juliangut@gmail.com>
  *
  * @license BSD-3-Clause
  * @link https://github.com/juliangut/php-cs-fixer-config
@@ -87,6 +87,7 @@ use PhpCsFixer\Fixer\FunctionNotation\CombineNestedDirnameFixer;
 use PhpCsFixer\Fixer\FunctionNotation\DateTimeCreateFromFormatCallFixer;
 use PhpCsFixer\Fixer\FunctionNotation\FopenFlagOrderFixer;
 use PhpCsFixer\Fixer\FunctionNotation\FopenFlagsFixer;
+use PhpCsFixer\Fixer\FunctionNotation\FunctionDeclarationFixer;
 use PhpCsFixer\Fixer\FunctionNotation\FunctionTypehintSpaceFixer;
 use PhpCsFixer\Fixer\FunctionNotation\ImplodeCallFixer;
 use PhpCsFixer\Fixer\FunctionNotation\LambdaNotUsedImportFixer;
@@ -739,6 +740,14 @@ abstract class AbstractFixerConfig extends Config
 
         if (version_compare($phpCsFixerVersion, '3.12', '>=')) {
             $rules[NoUselessConcatOperatorFixer::class] = true;
+        }
+
+        if (version_compare($phpCsFixerVersion, '3.13', '>=')) {
+            $rules[FunctionDeclarationFixer::class] = [
+                'closure_function_spacing' => 'one',
+                'closure_fn_spacing' => 'none',
+                'trailing_comma_single_line' => false,
+            ];
         }
 
         if ($this->phpUnit) {
